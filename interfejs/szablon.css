@@ -1,0 +1,12 @@
+body {
+  font-family: "Source Sans Pro", sans-serif;
+  background-color: #fbfbfd;
+}
+
+.page {
+  display: flex;
+  width: 1200px;
+  height: 749px;
+  margin: 0 auto;
+  background: #fbfbfd;
+}
