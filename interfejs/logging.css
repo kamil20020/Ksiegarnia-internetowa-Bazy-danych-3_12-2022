@@ -231,7 +231,7 @@ body {
 
 .no-account {
   position: absolute;
-  width: 349px;
+  width: 364px;
   height: 23px;
   left: 560px;
   top: 680px;
@@ -243,4 +243,77 @@ body {
   line-height: 24px;
 
   color: #1c3cad;
+  border: none;
+  background-color: #fbfbfd;
+}
+
+.ellipse-back {
+  position: absolute;
+  width: 197px;
+  height: 91px;
+  left: 206px;
+  top: 695px;
+  border-radius: 50%;
+
+  background: #d9d9d9;
+}
+.ellipse-back:hover {
+  background: #afabab;
+}
+
+.left-arrow-line {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 46px;
+  height: 0px;
+  left: 10px;
+  top: 39px;
+  background-color: #000000;
+  border: 3px solid #000000;
+  transform: rotate(-180deg);
+}
+
+.left-arrow-up {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 23px;
+  height: 0px;
+  left: 5px;
+  top: 45px;
+  background-color: #000000;
+  border: 3px solid #000000;
+  transform: rotate(50deg);
+}
+
+.left-arrow-down {
+  box-sizing: border-box;
+
+  position: absolute;
+  width: 23px;
+  height: 0px;
+  left: 5px;
+  top: 32px;
+  background-color: #000000;
+  border: 3px solid #000000;
+  transform: rotate(-50deg);
+}
+
+.ellipse-text {
+  position: absolute;
+  width: 102px;
+  height: 59px;
+  left: 70px;
+  top: 15px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+
+  color: #000000;
 }
