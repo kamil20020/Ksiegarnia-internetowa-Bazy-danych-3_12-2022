@@ -41,15 +41,7 @@ const Register = () => {
     telephone: "",
   });
 
-  const [errors, setErrors] = React.useState<FormFields>({
-    name: "",
-    username: "",
-    password: "",
-    passwordRepeat: "",
-    surname: "",
-    email: "",
-    telephone: "",
-  });
+  const [errors, setErrors] = React.useState<FormFields>(form);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -94,8 +86,8 @@ const Register = () => {
     if (!FormValidator.checkIfIsRequired(form.passwordRepeat)) {
       newErrorsState.passwordRepeat = FormValidator.requiredMessage;
       success = false;
-    } else if (!FormValidator.checkMinLength(form.passwordRepeat, 3)) {
-      newErrorsState.passwordRepeat = FormValidator.minLengthMessage;
+    } else if (form.password !== form.passwordRepeat) {
+      newErrorsState.passwordRepeat = "Hasła się nie zgadzają";
       success = false;
     }
     if (!FormValidator.checkIfIsRequired(form.surname)) {
@@ -110,8 +102,8 @@ const Register = () => {
     if (!FormValidator.checkIfIsRequired(form.email)) {
       newErrorsState.email = FormValidator.requiredMessage;
       success = false;
-    } else if (!FormValidator.checkMinLength(form.email, 3)) {
-      newErrorsState.email = FormValidator.minLengthMessage;
+    } else if (!FormValidator.checkEmail(form.email)) {
+      newErrorsState.email = FormValidator.emailMessage;
       success = false;
     }
     if (!FormValidator.checkIfIsRequired(form.telephone)) {
@@ -136,108 +128,107 @@ const Register = () => {
   };
 
   return (
-    <React.Fragment>
-      <Grid item xs={12} marginTop={8}>
+    <Grid item container justifyContent="center" alignItems="center">
+      <Grid item xs={12}>
         <Typography variant="h4" textAlign="center">
           Rejestracja
         </Typography>
       </Grid>
-      <Grid item xs={3} container marginTop={10} marginRight={70}>
-        <ValidatedForm
-          fieldName="Imię"
-          placeholder="Wpisz imię..."
-          value={form.name}
-          error={errors.name}
-          onChange={(value) => setForm({ ...form, name: value })}
-          onErrorChange={(error) => setErrors({ ...errors, name: error })}
-        />
-        <ValidatedForm
-          fieldName="Nazwa użytkownika"
-          placeholder="Wpisz nazwę użytkownika..."
-          value={form.username}
-          error={errors.username}
-          onChange={(value) => setForm({ ...form, username: value })}
-          onErrorChange={(error) => setErrors({ ...errors, username: error })}
-        />
-        <ValidatedForm
-          fieldName="Hasło"
-          placeholder="Wpisz hasło..."
-          type="password"
-          value={form.password}
-          error={errors.password}
-          onChange={(value) => setForm({ ...form, password: value })}
-          onErrorChange={(error) => setErrors({ ...errors, password: error })}
-        />
-        <ValidatedForm
-          fieldName="Powtórz hasło"
-          placeholder="Powtórz hasło..."
-          type="password"
-          value={form.passwordRepeat}
-          error={errors.password}
-          onChange={(value) => setForm({ ...form, passwordRepeat: value })}
-          onErrorChange={(error) =>
-            setErrors({ ...errors, passwordRepeat: error })
-          }
-        />
+      <Grid item xs={12} container marginTop={10} justifyContent="center">
+        <Grid item xs={3} marginRight={20}>
+          <ValidatedForm
+            fieldName="Imię"
+            placeholder="Wpisz imię..."
+            value={form.name}
+            error={errors.name}
+            onChange={(value) => setForm({ ...form, name: value })}
+            onErrorChange={(error) => setErrors({ ...errors, name: error })}
+          />
+          <ValidatedForm
+            fieldName="Nazwa użytkownika"
+            placeholder="Wpisz nazwę użytkownika..."
+            value={form.username}
+            error={errors.username}
+            onChange={(value) => setForm({ ...form, username: value })}
+            onErrorChange={(error) => setErrors({ ...errors, username: error })}
+          />
+          <ValidatedForm
+            fieldName="Hasło"
+            placeholder="Wpisz hasło..."
+            type="password"
+            value={form.password}
+            error={errors.password}
+            onChange={(value) => setForm({ ...form, password: value })}
+            onErrorChange={(error) => setErrors({ ...errors, password: error })}
+          />
+          <ValidatedForm
+            fieldName="Powtórz hasło"
+            placeholder="Powtórz hasło..."
+            type="password"
+            value={form.passwordRepeat}
+            error={errors.passwordRepeat}
+            onChange={(value) => setForm({ ...form, passwordRepeat: value })}
+            onErrorChange={(error) =>
+              setErrors({ ...errors, passwordRepeat: error })
+            }
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <ValidatedForm
+            fieldName="Nazwisko"
+            placeholder="Wpisz nazwisko..."
+            value={form.surname}
+            error={errors.surname}
+            onChange={(value) => setForm({ ...form, surname: value })}
+            onErrorChange={(error) => setErrors({ ...errors, surname: error })}
+          />
+          <ValidatedForm
+            fieldName="E-mail"
+            placeholder="Wpisz e-mail..."
+            value={form.email}
+            error={errors.email}
+            onChange={(value) => setForm({ ...form, email: value })}
+            onErrorChange={(error) => setErrors({ ...errors, email: error })}
+          />
+          <ValidatedForm
+            fieldName="Numer telefonu"
+            placeholder="Wpisz nr telefonu..."
+            value={form.telephone}
+            error={errors.telephone}
+            onChange={(value) => setForm({ ...form, telephone: value })}
+            onErrorChange={(error) => setErrors({ ...errors, telephone: error })}
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={3} container marginLeft={70}>
-        <ValidatedForm
-          fieldName="Nazwisko"
-          placeholder="Wpisz nazwisko..."
-          value={form.surname}
-          error={errors.surname}
-          onChange={(value) => setForm({ ...form, surname: value })}
-          onErrorChange={(error) => setErrors({ ...errors, surname: error })}
-        />
-        <ValidatedForm
-          fieldName="E-mail"
-          placeholder="Wpisz e-mail..."
-          value={form.email}
-          error={errors.username}
-          onChange={(value) => setForm({ ...form, email: value })}
-          onErrorChange={(error) => setErrors({ ...errors, email: error })}
-        />
-        <ValidatedForm
-          fieldName="Numer telefonu"
-          placeholder="Wpisz nr telefonu..."
-          value={form.telephone}
-          error={errors.telephone}
-          onChange={(value) => setForm({ ...form, telephone: value })}
-          onErrorChange={(error) => setErrors({ ...errors, telephone: error })}
-        />
-        <Grid
-          item
-          xs={6}
-          container
-          marginTop={10}
-          marginLeft={0}
-          justifyContent="center"
+      <Grid
+        item
+        xs={1.5}
+        container
+        marginTop={10}
+        justifyContent="center"
+      >
+        <Button
+          fullWidth
+          variant="contained"
+          color="secondary"
+          onClick={handleSubmit}
         >
-          <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
-            onClick={handleSubmit}
-          >
-            Zarejestruj się
-          </Button>
-        </Grid>
-        <Grid item container justifyContent="center" marginTop={3}>
-          <Button
-            fullWidth
-            variant="text"
-            color="secondary"
-            sx={{ color: "#1C3CAD" }}
-            onClick={() => navigate("/login")}
-          >
-            Masz już konto? Zaloguj się
-          </Button>
-        </Grid>
+          Zarejestruj się
+        </Button>
       </Grid>
-      <Grid item xs={12}>
-        <BottomNavigation text={"Wróć do strony głównej"} path="../" />
+      <Grid item container justifyContent="center" marginTop={3}>
+        <Button
+          fullWidth
+          variant="text"
+          color="secondary"
+          sx={{ color: "#1C3CAD" }}
+          onClick={() => navigate("/login")}
+        >
+          Masz już konto? Zaloguj się
+        </Button>
       </Grid>
-    </React.Fragment>
+      <BottomNavigation text={"Wróć do strony głównej"} path="../" />
+    </Grid>
   );
 };
 

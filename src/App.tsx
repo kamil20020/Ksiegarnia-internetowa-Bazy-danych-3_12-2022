@@ -8,6 +8,10 @@ import Shop from "./pages/shop/Shop";
 import Login from "./pages/header/Login";
 import Register from "./pages/header/Register";
 import Notification from "./components/common/Notification";
+import NotFound from "./pages/errors/NotFound";
+import './index.css';
+import BookDetails from "./pages/book-details/BookDetails";
+import Basket from "./pages/basket/Basket";
 
 const theme = createTheme(
   {
@@ -34,6 +38,9 @@ const theme = createTheme(
         main: "#008080",
         contrastText: "#fff",
       },
+      background: {
+        paper: '#E8EEF6'
+      }
     },
   },
   plPL
@@ -50,6 +57,9 @@ function App() {
               <Route path="/" element={<Shop />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/book-details/:bookId" element={<BookDetails />} />
+              <Route path="/basket" element={<Basket />} />
+              <Route path="*" element={<NotFound /> } />
             </Routes>
           </Content>
         </ThemeProvider>

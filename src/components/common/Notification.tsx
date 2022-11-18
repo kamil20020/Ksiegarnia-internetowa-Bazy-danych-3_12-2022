@@ -10,11 +10,11 @@ const Notification = () => {
 
     return (
         <Snackbar
-              open={notification.status}
-              autoHideDuration={4000}
-              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-              onClose={() => dispatch(setNotificationStatus(false))}
-          >
+            open={notification.status}
+            autoHideDuration={4000}
+            anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+            onClose={() => dispatch(setNotificationStatus(false))}
+        >
             <Alert 
                 onClose={() => dispatch(setNotificationStatus(false))} 
                 severity={notification.type as AlertColor}

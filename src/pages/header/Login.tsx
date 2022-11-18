@@ -31,10 +31,7 @@ const Login = () => {
     password: "",
   });
 
-  const [errors, setErrors] = React.useState<FormFields>({
-    username: "",
-    password: "",
-  });
+  const [errors, setErrors] = React.useState<FormFields>(form);
 
   const navigate = useNavigate();
 
@@ -81,8 +78,8 @@ const Login = () => {
   };
 
   return (
-    <React.Fragment>
-      <Grid item xs={12} marginTop={16}>
+    <Grid item container justifyContent="center" alignItems="center">
+      <Grid item xs={12}>
         <Typography variant="h4" textAlign="center">
           Logowanie
         </Typography>
@@ -132,10 +129,8 @@ const Login = () => {
           </Button>
         </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <BottomNavigation text={"Wróć do strony głównej"} path="../" />
-      </Grid>
-    </React.Fragment>
+      <BottomNavigation text={"Wróć do strony głównej"} path="../" />
+    </Grid>
   );
 };
 

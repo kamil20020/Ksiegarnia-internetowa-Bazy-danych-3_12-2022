@@ -78,7 +78,7 @@ const Header = () => {
           </React.Fragment>
         )}
         <Grid item>
-          <Link to="/" className="nice-link">
+          <Link to="/basket" className="nice-link">
             <img src={basket} width="60" />
           </Link>
         </Grid>

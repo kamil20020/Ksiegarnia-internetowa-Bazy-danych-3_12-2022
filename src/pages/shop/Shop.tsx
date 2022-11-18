@@ -7,7 +7,7 @@ import BookCategory from "../../models/BookCategory";
 import FormElement from "../../components/common/FormElement";
 import DatePickerForm from "../../components/common/DatePickerForm";
 
-const books: Book[] = [
+export const books: Book[] = [
     {
         id: 1,
         title: 'Ostatnie życzenie. Wiedźmin. Tom 1',

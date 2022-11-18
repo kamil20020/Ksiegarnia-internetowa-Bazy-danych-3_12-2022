@@ -2,6 +2,8 @@
 
 export interface ImageProps {
     img: any,
+    width?: number,
+    height?: number,
     alt?: string
 }
 
@@ -21,7 +23,12 @@ const CustomImage = (props: ImageProps) => {
     }, [props])
 
     return (
-        <img alt="" src={`data:image/jpeg;base64,${imgStr}`} width={128} height={204}/>
+        <img 
+            alt={props.alt ? props.alt : ""} 
+            src={`data:image/jpeg;base64,${imgStr}`} 
+            width={props.width ? props.width : 128} 
+            height={props.height ? props.height : 204}
+        />
     );
 }
 
