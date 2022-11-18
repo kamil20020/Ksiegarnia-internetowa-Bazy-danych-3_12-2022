@@ -64,6 +64,8 @@ const Register = () => {
     } else if (!FormValidator.checkMinLength(form.name, 3)) {
       newErrorsState.name = FormValidator.minLengthMessage;
       success = false;
+    } else if (!FormValidator.checkOnlyLetters(form.name)) {
+      newErrorsState.name = FormValidator.onlyLettersMessage;
     }
     if (!FormValidator.checkIfIsRequired(form.username)) {
       newErrorsState.username = FormValidator.requiredMessage;
@@ -102,6 +104,8 @@ const Register = () => {
     } else if (!FormValidator.checkMinLength(form.surname, 3)) {
       newErrorsState.surname = FormValidator.minLengthMessage;
       success = false;
+    } else if (!FormValidator.checkOnlyLetters(form.surname)) {
+      newErrorsState.surname = FormValidator.onlyLettersMessage;
     }
     if (!FormValidator.checkIfIsRequired(form.email)) {
       newErrorsState.email = FormValidator.requiredMessage;
