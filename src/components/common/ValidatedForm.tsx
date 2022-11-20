@@ -19,7 +19,7 @@ const ValidatedForm = (props: FormElementProps) => {
     }
 
     return (
-        <Grid item xs={12} container alignItems="center">
+        <Grid item xs={12} container justifyContent="center" alignItems="center">
             <Grid item xs={6}>
                 <Typography 
                     textAlign="start" 
@@ -28,7 +28,7 @@ const ValidatedForm = (props: FormElementProps) => {
                     {props.fieldName}
                 </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} container justifyContent="end">
                 <FormControl>
                     <TextField
                         placeholder={props.placeholder}

@@ -1,11 +1,12 @@
 ﻿import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { Book } from "../../models/Book";
+import Book from "../../models/Book";
 import { book1 } from "../../assets/books";
 import BookHeader from "./BookHeader";
 import BookCategory from "../../models/BookCategory";
 import FormElement from "../../components/common/FormElement";
 import DatePickerForm from "../../components/common/DatePickerForm";
+import { privateDecrypt } from "crypto";
 
 export const books: Book[] = [
     {
@@ -293,6 +294,7 @@ const Shop = () => {
                         <DatePickerForm
                             fieldName="Data wydania"
                             placeholder="Wpisz datę..."
+                            maxDate={new Date()}
                             value={form.releaseDate}
                             onChange={(newValue) => setForm({...form, releaseDate: newValue != null ? newValue : undefined})}
                         />
@@ -312,6 +314,7 @@ const Shop = () => {
                                         placeholder="Od"
                                         type="number"
                                         color="secondary"
+                                        inputProps={{min: 0, max: form.priceTo}}
                                         value={form.priceFrom}
                                         onChange={(event) => setForm({...form, priceFrom: +event.target.value})}
                                     />
@@ -328,7 +331,8 @@ const Shop = () => {
                                         placeholder="Do"
                                         type="number"
                                         color="secondary"
-                                        value={form.priceFrom}
+                                        inputProps={{min: form.priceFrom}}
+                                        value={form.priceTo}
                                         onChange={(event) => setForm({...form, priceTo: +event.target.value})}
                                     />
                                 </Grid>

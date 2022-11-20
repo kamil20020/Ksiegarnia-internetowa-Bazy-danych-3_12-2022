@@ -1,7 +1,8 @@
 ﻿import { Button, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Book } from "../../models/Book";
+import { useNavigate } from "react-router-dom";
+import Book from "../../models/Book";
 import { BasketProduct } from "../../redux/slices/basketSlice";
 import { RootState } from "../../redux/store";
 import { books } from "../shop/Shop";
@@ -15,10 +16,12 @@ export interface BasketProductWithDetails {
 const Basket = () => {
 
     const basketProducts = useSelector((state: RootState) => state.basket).products
-    const dispatch = useDispatch()
 
     const [basketProductsWithDetails, setBasketProductsWithDetails] = useState<BasketProductWithDetails[]>([])
     const [totalPrice, setTotalPrice] = useState<number>(0);
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     useEffect(() => {
 
@@ -63,6 +66,7 @@ const Basket = () => {
                     <Button
                         variant="contained"
                         color="secondary"
+                        onClick={() => navigate('/order')}
                     >
                         Złóż zamówienie
                     </Button>

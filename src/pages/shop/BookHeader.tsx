@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CustomImage from "../../components/common/CustomImage";
-import { Book } from "../../models/Book";
+import Book from "../../models/Book";
 import "./Shop.css"
 
 const BookHeader = (props: {book: Book}) => {

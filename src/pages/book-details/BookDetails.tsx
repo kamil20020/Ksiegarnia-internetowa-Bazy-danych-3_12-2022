@@ -4,12 +4,13 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { book1 } from "../../assets/books";
 import CustomImage from "../../components/common/CustomImage";
-import { Book } from "../../models/Book";
+import Book from "../../models/Book";
 import BottomNavigation from "../../components/common/BottomNavigation";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct, BasketProduct } from "../../redux/slices/basketSlice";
 import { RootState } from "../../redux/store";
 import NotFound from "../errors/NotFound";
+import { setNotificationMessage, setNotificationStatus, setNotificationType } from "../../redux/slices/notificationSlice";
 
 const book: Book = {
     id: 1,
@@ -29,6 +30,19 @@ const book: Book = {
     price: 39.92
 }
 
+export const DataRow = (props: {title: string, value: string}) => {
+    return (
+        <Grid item container>
+            <Grid item xs={6}>
+                <Typography variant="h6">{props.title}</Typography>
+            </Grid>
+            <Grid item xs={6} container justifyContent="end">
+                <Typography variant="h6">{props.value}</Typography>
+            </Grid>
+        </Grid>
+    )
+}
+
 const BookDetails = () => {
 
     const bookId = useParams().bookId
@@ -43,19 +57,6 @@ const BookDetails = () => {
         return <NotFound />
     }
 
-    const DataRow = (props: {title: string, value: string}) => {
-        return (
-            <Grid item container>
-                <Grid item xs={6}>
-                    <Typography variant="h6">{props.title}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                    <Typography variant="h6">{props.value}</Typography>
-                </Grid>
-            </Grid>
-        )
-    }
-
     const doBasketHave = (): boolean => {
         return basketItems.map((p: BasketProduct) => p.id).includes(+bookId)
     }
@@ -63,6 +64,9 @@ const BookDetails = () => {
     const handleAddToBasket = () => {
         if(!doBasketHave()){
             dispatch(addProduct(+bookId))
+            dispatch(setNotificationMessage("Dodano produkt do koszyka"));
+            dispatch(setNotificationType("success"));
+            dispatch(setNotificationStatus(true));
         }
     }
 

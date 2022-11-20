@@ -38,6 +38,11 @@ const Header = () => {
         justifyContent="end"
         columnSpacing={3}
       >
+        <Button variant="contained" color="secondary"
+          onClick={() => navigate('/my-orders')}
+        >
+          Moje zamówienia
+        </Button>
         {isUserLogged ? (
           <React.Fragment>
             <Grid item>

@@ -1,7 +1,7 @@
 import { AppBar, createTheme, ThemeProvider } from "@mui/material";
 import React from "react";
 import { plPL } from "@mui/material/locale";
-import { Route, BrowserRouter, Routes } from "react-router-dom";
+import { Route, BrowserRouter, Routes, Outlet } from "react-router-dom";
 import Header from "./components/layout/header/Header";
 import Content from "./components/layout/content/Content";
 import Shop from "./pages/shop/Shop";
@@ -12,6 +12,8 @@ import NotFound from "./pages/errors/NotFound";
 import './index.css';
 import BookDetails from "./pages/book-details/BookDetails";
 import Basket from "./pages/basket/Basket";
+import OrderView from "./pages/order/OrderView";
+import MyOrders from "./pages/header/my-orders/MyOrders";
 
 const theme = createTheme(
   {
@@ -58,7 +60,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/book-details/:bookId" element={<BookDetails />} />
-              <Route path="/basket" element={<Basket />} />
+              <Route path="/basket" element={<Basket/>} />
+              <Route path="/order" element={<OrderView />} />
+              <Route path="/my-orders" element={<MyOrders />} />
               <Route path="*" element={<NotFound /> } />
             </Routes>
           </Content>

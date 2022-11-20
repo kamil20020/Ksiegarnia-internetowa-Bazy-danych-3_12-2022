@@ -1,6 +1,6 @@
 ﻿import { Grid, IconButton, Typography } from "@mui/material";
 import CustomImage from "../../components/common/CustomImage";
-import { Book } from "../../models/Book";
+import Book from "../../models/Book";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';

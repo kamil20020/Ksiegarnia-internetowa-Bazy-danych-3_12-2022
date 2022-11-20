@@ -1,5 +1,5 @@
 ﻿import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Book } from "../../models/Book";
+import Book from "../../models/Book";
 
 export interface BasketProduct {
     id: number,
@@ -7,11 +7,13 @@ export interface BasketProduct {
 }
 
 export interface BasketState {
-    products: BasketProduct[]
+    products: BasketProduct[],
+    totalPrice: number
 }
 
 const initialState: BasketState = {
-    products: []
+    products: [],
+    totalPrice: 0
 }
 
 export const basketSlice = createSlice({
