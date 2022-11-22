@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': 'bookshopdb',
         'USER': 'bazy',
         'PASSWORD': 'Danych1%',
-        'HOST': 'bookshop.mysql.database.azure.com',
+        'HOST': 'book.mysql.database.azure.com',
         'PORT': '3306',
         'OPTIONS': {
         	'read_default_file': '/etc/mysql/my.cnf',
