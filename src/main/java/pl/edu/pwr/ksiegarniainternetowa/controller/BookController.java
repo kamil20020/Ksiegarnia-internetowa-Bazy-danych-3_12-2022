@@ -16,8 +16,8 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping(value = "/{id}")
-    public BookEntity getBookById(@PathVariable("id") Long bookId) {
-        return bookService.getBookById(Long.valueOf(bookId));
+    public BookEntity getBookById(@PathVariable("id") Integer bookId) {
+        return bookService.getBookById(bookId);
     }
 
 }

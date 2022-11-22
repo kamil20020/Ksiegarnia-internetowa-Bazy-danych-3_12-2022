@@ -14,7 +14,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    public BookEntity getBookById(Long bookId) {
+    public BookEntity getBookById(Integer bookId) {
         Optional<BookEntity> bookEntity = bookRepository.findById(bookId);
         // Optional, zeby mozna bylo ewentualnie wyrzucac wyjatki
         return bookEntity.get();
