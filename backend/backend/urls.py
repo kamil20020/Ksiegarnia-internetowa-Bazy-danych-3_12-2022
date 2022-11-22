@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.shortcuts import render
 from backend import views
-from backend.database import database_connection as db
 
 
   
 urlpatterns = [
   path('admin/', admin.site.urls),
-  re_path('', views.render_react),
+  path('', views.return_page),
+  path('books/all', views.get_books_list)
 ]
