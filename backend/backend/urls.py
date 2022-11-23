@@ -15,14 +15,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, re_path
-from django.shortcuts import render
+from django.urls import path
 from backend import views
 
 
   
 urlpatterns = [
-  path('admin/', admin.site.urls),
   path('', views.return_page),
-  path('books/all', views.get_books_list)
+  path('books/all', views.get_start_page_data),
+  path('books/find/<str:title1>/<str:genre1>/<str:author1>/<str:publisher1>/<str:release1>/<str:min1>/<str:max1>', views.find_books),
+  path('book/<int:id>', views.get_book)
 ]

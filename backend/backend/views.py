@@ -2,23 +2,39 @@ from django.shortcuts import render
 from database.database_module import database_executor as db
 from django.http import HttpResponse
 
-def get_books_list(request):
-    books =db.get_all_books()
-    if len(books) != 0:
-        return HttpResponse(books, status=200)
-    else:
-        return HttpResponse(status=204)
-
-    
-
-
-
-
 def return_page(request):
+    if request.method == "GET":
+        return render(request, "index.html")
+    return HttpResponse(status=403)
 
-    return render(request, "index.html")
+def get_start_page_data(request):
+    if request.method == "GET":
+        page =db.get_start_page_data()
+        if len(page) != 0:
+            return HttpResponse(page, status=200)
+        else:
+            return HttpResponse(status=204)
+    return HttpResponse(status=403)
 
 
+def find_books(request, title: str, genre: str, author: str, publisher: str, release: str, min: str, max: str):
+    if request.method == "GET":
+        resp = db.find_books( title, genre, author, publisher, release, min, max)
+        if len(resp) != 0:
+            return HttpResponse(resp, status=200)
+        else:
+            return HttpResponse(status=204)
+    return HttpResponse(status=403)
+
+
+def get_book(request, id: int):
+    if request.method == "GET":
+        resp = db.get_book(id)
+        if len(resp) != 0:
+            return HttpResponse(resp, status=200)
+        else:
+            return HttpResponse(status=204)
+    return HttpResponse(status=403)
 
 
 
