@@ -17,10 +17,10 @@ def get_start_page_data(request):
     return HttpResponse(status=403)
 
 
-def find_books(request, title: str, genre: str, author: str, publisher: str, release: str, min: str, max: str):
+def find_books(request, title: str, genre: str, authorfirstname: str,authorsurname: str, publisher: str, release: str, min: str, max: str, check: str):
     if request.method == "GET":
-        resp = db.find_books( title, genre, author, publisher, release, min, max)
-        if len(resp) != 0:
+        resp = db.find_books( title, genre, authorfirstname, authorsurname, publisher, release, min, max, check)
+        if len(resp) > 2:
             return HttpResponse(resp, status=200)
         else:
             return HttpResponse(status=204)

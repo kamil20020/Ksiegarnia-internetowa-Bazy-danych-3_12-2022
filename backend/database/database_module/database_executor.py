@@ -2,6 +2,7 @@ import MySQLdb as mc
 from database.models import *
 from database.serializers import BooksSerializer,BooksSerializer2, BookAuthorshipsSerializer, BookCategoriesSerializer
 import json
+import datetime
 
 
 def get_start_page_data():
@@ -21,55 +22,61 @@ def get_start_page_data():
     dict2["categories"] = res
     list1.append(dict2)    
     ret = json.dumps(list1)
-    print(ret)
     return ret
     
 
 
-def find_books(title1: str, genre1: str, author1: str, publisher1: str, release1: str, min1: str, max1: str):
+def find_books(title1: str, genre1: str, author1: str, author2:str, publisher1: str, release1: str, min1: str, max1: str, check: str):
+
+    if len(check) != 7:
+        return ""
+    for a in check:
+        if a != '0' and a != '1':
+            return ""
     all_entries = None
-    if len(title1)> 0:
-        if len(genre1)> 0:
-            if len(publisher1)> 0:
-                if len(release1)> 0:
-                    if len(min1)> 0:
-                        min2 = float(min1)
-                        if len(max1)> 0:
-                            max2 = float(max1)
-                            list1 = []
-                            all_entries = Books.objects.filter(is_available = 1, title = title1, genre = genre1, publisher = publisher1,
-                                release_date= release1, price__ge = min2, price__le = max2).select_related('book_category','publisher','book_cover','language')
+    dict1 = {}
+    dict1['is_available'] = 1
+    if check[0] == '1':
+        dict1['title__icontains'] = title1
+    if check[4] == '1':
+        format = '%Y-%m-%d'
+        date = datetime.datetime.strptime(release1, format).date()
+        dict1['release_date__exact'] = date
+    if check[5] == '1':
+        min2 = float(min1)
+        dict1['price__gte'] = min2
+    if check[6] == '1':
+        max2 = float(max1)
+        dict1['price__lte'] = max2
 
+    all_entries = Books.objects.filter(**dict1).select_related('book_category','publisher')
+    list1 = []
+    for i in all_entries:
+        good = True
+        if check[1] == '1':
+            if genre1 != i.book_category.name:
+                good = False
+        if good is True and check[3] == '1':
+            if publisher1 != i.publisher.name:
+                good = False
+        if good is True:
+            if check[2] == '1':
+                authors = BookAuthorships.objects.select_related('book_author').filter(book = i.id)
+                contains = False
+                for j in authors:
+                    if j.book_author.firstname == author1 and j.book_author.surname == author2:
+                        contains = True
+                        break                
+                if contains is True:
+                    serializer = BooksSerializer(i)
+                    res = json.dumps(serializer.data)
+                    list1.append(res)
+            else:
+                serializer = BooksSerializer(i)
+                res = json.dumps(serializer.data)
+                list1.append(res)
 
-
-
-
-
-
-
-    # all_entries = Books.objects.filter(is_available = 1).select_related('book_category','publisher','book_cover','language')
-    # list1 = []
-    # for i in all_entries:
-    #     dict1 = {}
-    #     serializer = BooksSerializer(i)
-    #     res = json.dumps(serializer.data)
-    #     dict1["book"] = res
-    #     authors = BookAuthorships.objects.select_related('book_author').filter(book = i.id)
-    #     serializer2 = BookAuthorshipsSerializer(authors, many = True)
-    #     res2 = json.dumps(serializer2.data)
-    #     dict1["authors"] = res2
-    #     list1.append(dict1)
-    
-
-    # dict1 = {}
-    # all_categories = BookCategories.objects.all()
-    # serializer = BookCategoriesSerializer(all_categories, many = True)
-    # res = json.dumps(serializer.data)
-    # dict1["categories"] = res
-    # list1.append(dict1)    
-    # ret = json.dumps(list1)
-    # print(ret)
-    # return ret
+    return json.dumps(list1)
 
 def get_book(id: int):
     all_entries = Books.objects.filter(is_available = 1, id = id).select_related('book_category','publisher','book_cover','language')
@@ -86,6 +93,7 @@ def get_book(id: int):
         list1.append(dict1)
 
         ret = json.dumps(list1)
-        print(ret)
         return ret
     return ""
+
+
