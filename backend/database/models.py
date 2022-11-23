@@ -28,6 +28,7 @@ class Publishers(models.Model):
     class Meta:
         db_table = "Publishers"
 
+
 class BookCategories(models.Model):
     name = models.CharField(max_length=22, unique=True)
 
