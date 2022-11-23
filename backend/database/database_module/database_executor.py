@@ -40,7 +40,10 @@ def find_books(title1: str, genre1: str, author1: str, author2:str, publisher1: 
         dict1['title__icontains'] = title1
     if check[4] == '1':
         format = '%Y-%m-%d'
-        date = datetime.datetime.strptime(release1, format).date()
+        try:
+            date = datetime.datetime.strptime(release1, format).date()
+        except ValueError:
+            return ""
         dict1['release_date__exact'] = date
     if check[5] == '1':
         min2 = float(min1)
@@ -48,7 +51,6 @@ def find_books(title1: str, genre1: str, author1: str, author2:str, publisher1: 
     if check[6] == '1':
         max2 = float(max1)
         dict1['price__lte'] = max2
-
     all_entries = Books.objects.filter(**dict1).select_related('book_category','publisher')
     list1 = []
     for i in all_entries:
@@ -75,7 +77,6 @@ def find_books(title1: str, genre1: str, author1: str, author2:str, publisher1: 
                 serializer = BooksSerializer(i)
                 res = json.dumps(serializer.data)
                 list1.append(res)
-
     return json.dumps(list1)
 
 def get_book(id: int):
