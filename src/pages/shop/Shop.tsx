@@ -12,11 +12,12 @@ import { BookSearchCriteria } from "../../services/BookService";
 
 export const books: Book[] = [
     {
+        id: 1,
         title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
         authors: [{author_name: 'Andrzej', author_surname: 'Sapkowski'}],
-        category: 'Przygodowe',
+        book_category: 'Przygodowe',
         publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
+        book_cover: 'okładka miękka',
         language: 'polski',
         avatar: book1,
         description: 'Ostatnie życzenie. Wiedźmin, Tom 1',

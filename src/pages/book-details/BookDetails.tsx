@@ -12,6 +12,7 @@ import { RootState } from "../../redux/store";
 import NotFound from "../errors/NotFound";
 import { setNotificationMessage, setNotificationStatus, setNotificationType } from "../../redux/slices/notificationSlice";
 import BookService from "../../services/BookService";
+import { Author } from "../../models/Book";
 
 export const DataRow = (props: {title: string, value: string}) => {
     return (
@@ -86,9 +87,9 @@ const BookDetails = () => {
                 <Grid item>
                     <Typography variant="h4">{book.title}</Typography>
                 </Grid>
-                <DataRow title={"Autorzy"} value={book.authors.toString()}/>
+                <DataRow title={"Autorzy"} value={book.authors.map((author: Author) => author.author_name + " " + author.author_surname).join(', ')}/>
                 <DataRow title={"Wydawnictwo"} value={book.publisher}/>
-                <DataRow title={"Data wydania"} value={book.release_date?.toLocaleDateString() as string}/>
+                <DataRow title={"Data wydania"} value={book.release_date ? new Date(book.release_date).toLocaleDateString() as string : ''}/>
                 <DataRow title={"Liczba stron"} value={book.number_of_pages}/>
                 <Grid item container marginTop={2} justifyContent="space-between">
                     <Grid item xs={5}>
@@ -120,7 +121,7 @@ const BookDetails = () => {
                          <DataRow title={"ISBN"} value={book.isbn as string}/>
                          <DataRow title={"Numer wydania"} value={book.release_number ? book.release_number.toString() : ''}/>
                          <DataRow title={"Język"} value={book.language}/>
-                         <DataRow title={"Oprawa"} value={book.cover}/>
+                         <DataRow title={"Oprawa"} value={book.book_cover}/>
                          <DataRow title={"Wymiary"} value={book.size}/>
                     </Grid>
                 }

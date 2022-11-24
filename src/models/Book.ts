@@ -7,9 +7,9 @@ export default interface Book{
     id: number
     title: string,
     authors: Author[],
-    category: string,
+    book_category: string,
     publisher: string,
-    cover: string,
+    book_cover: string,
     language: string,
     avatar?: string,
     description?: string,

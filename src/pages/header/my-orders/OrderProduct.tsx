@@ -18,7 +18,7 @@ const OrderProduct = (props: {book: Book, quantity: number}) => {
                     <Typography variant="h5">{book.title}</Typography>
                 </Grid>
                 <Grid item xs={6} marginTop={1.5}>
-                    <Typography variant="h6">{book.authors}</Typography>
+                    <Typography variant="h6">{book.authors.join(' ')}</Typography>
                 </Grid>
                 <Grid item xs={2} container justifyContent="space-between" alignItems="center">
                     <Grid item xs={6} container alignItems="center">
