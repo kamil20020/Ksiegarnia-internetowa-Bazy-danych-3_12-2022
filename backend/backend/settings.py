@@ -93,9 +93,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bookshopdb',
-        'USER': 'bazy',
-        'PASSWORD': 'Danych1%',
-        'HOST': 'book.mysql.database.azure.com',
+        'USER': 'unlogged_person',
+        'PASSWORD': '5Dn%sfr%Jth6',
+        'HOST': 'bookshop.mysql.database.azure.com',
         'PORT': '3306',
         'OPTIONS': {
         	'read_default_file': '/etc/mysql/my.cnf',
