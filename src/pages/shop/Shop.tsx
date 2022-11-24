@@ -37,13 +37,13 @@ interface BookCategorySelect{
 }
 
 interface Form {
-    title?: string,
-    author?: string,
-    publisher?: string,
+    title: string,
+    author: string,
+    publisher: string,
     releaseDate?: Date,
-    priceFrom?: number,
-    priceTo?: number,
-    bookCategories?: BookCategorySelect[]
+    priceFrom: number,
+    priceTo: number,
+    bookCategories: BookCategorySelect[]
 }
 
 export interface BookHeader {
@@ -55,7 +55,14 @@ export interface BookHeader {
 
 const Shop = () => {
 
-    const [form, setForm] = useState<Form>({})
+    const [form, setForm] = useState<Form>({
+        title: '',
+        author: '',
+        publisher: '',
+        priceFrom: -1,
+        priceTo: -1,
+        bookCategories: []
+    })
 
     const [books, setBooks] = useState<BookHeader[]>([])
 
@@ -101,14 +108,34 @@ const Shop = () => {
             .map((category: BookCategorySelect) => category.name)
         : []
 
-        const criteria: BookSearchCriteria = {
-            title: form.title,
-            genres: selectedBookCategories,
-            author: form.author,
-            publisher: form.publisher,
-            releaseDate: form.releaseDate,
-            minPrice: form.priceFrom,
-            maxPrice: form.priceTo
+        let criteria: any = {}
+
+        if(form.title !== ''){
+            criteria['title'] = form.title 
+        }
+
+        if(form.bookCategories.length != 0){
+            criteria['genres'] = [...selectedBookCategories]
+        }
+
+        if(form.author !== ''){
+            criteria['author'] = form.author 
+        }
+
+        if(form.publisher !== ''){
+            criteria['publisher'] = form.publisher 
+        }
+
+        if(form.releaseDate){
+            criteria['releaseDate'] = form.releaseDate 
+        }
+
+        if(form.priceFrom != -1){
+            criteria['minPrice'] = form.priceFrom 
+        }
+
+        if(form.priceTo != -1){
+            criteria['maxPrice'] = form.priceTo 
         }
 
         BookService.getFoundBooks(criteria)
