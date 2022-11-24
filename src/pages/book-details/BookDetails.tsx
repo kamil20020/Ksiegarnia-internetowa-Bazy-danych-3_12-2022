@@ -1,6 +1,6 @@
 ﻿import { Button, Grid, Paper, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import { book1 } from "../../assets/books";
 import CustomImage from "../../components/common/CustomImage";
@@ -11,24 +11,7 @@ import { addProduct, BasketProduct } from "../../redux/slices/basketSlice";
 import { RootState } from "../../redux/store";
 import NotFound from "../errors/NotFound";
 import { setNotificationMessage, setNotificationStatus, setNotificationType } from "../../redux/slices/notificationSlice";
-
-const book: Book = {
-    id: 1,
-    title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-    authors: ['Sapkowski Andrzej'],
-    category: 'Przygodowe',
-    publisher: 'SUPERNOWA',
-    cover: 'okładka miękka',
-    language: 'polski',
-    avatar: book1,
-    description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-    isbn: '978-83-01-00000-1',
-    release_number: 1,
-    release_date: new Date('2014-10-06'),
-    size: '195 x 24 x 125',
-    number_of_pages: '332',
-    price: 39.92
-}
+import BookService from "../../services/BookService";
 
 export const DataRow = (props: {title: string, value: string}) => {
     return (
@@ -53,8 +36,32 @@ const BookDetails = () => {
 
     const [isShowingDetails, setIsShowingDetails] = useState<boolean>(false)
 
+    const [book, setBook] = useState<Book | null>(null)
+
+    useEffect(() => {
+        if(!bookId){
+            return
+        }
+        BookService.getBookData(+bookId)
+        .then((response) => {
+            const data = response.data
+            const book = data.book
+            const authors = data.authors
+            setBook({...book, authors: authors})
+            console.log(response.data)
+        })
+        .catch((error) => {
+
+        })
+    }, [])
+
+    
     if(!bookId){
         return <NotFound />
+    }
+
+    if(book == null){
+        return <div>Ładowanie</div>
     }
 
     const doBasketHave = (): boolean => {

@@ -1,5 +1,15 @@
 import axios from "axios"
 
+export interface BookSearchCriteria {
+    id?: number, 
+    title?:string, 
+    genres?: string[], 
+    author?: string,
+    publisher?: string, 
+    releaseDate?: Date, 
+    minPrice?: number, 
+    maxPrice?: number
+}
 
 class BookData{
 
@@ -10,10 +20,13 @@ class BookData{
         return axios.get(`${this.apiUrl}/book/${id}`);
     }
 
-    getFoundBooks(id: number, title:string, genre: string, authorFirstname: string, authorSurname: string,
-         publisher: string, releaseData: string, min: number, max:number, check: string){
+    getFoundBooks(searchCriteria: BookSearchCriteria){
 
-        return axios.get(`${this.apiUrl}/books/find/${title}/${genre}/${authorFirstname}/${authorSurname}/${publisher}/${releaseData}/${min}/${max}/${check}`);
+        return axios.get(`${this.apiUrl}/books/find/`, {
+            params: {
+              ...searchCriteria
+            }
+        });
     }
 
     getAllAvailableBooks(){

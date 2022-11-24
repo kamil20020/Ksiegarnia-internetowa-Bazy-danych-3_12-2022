@@ -2,10 +2,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CustomImage from "../../components/common/CustomImage";
-import Book from "../../models/Book";
 import "./Shop.css"
+import { BookHeader } from "./Shop";
 
-const BookHeader = (props: {book: Book}) => {
+const BookHeaderView = (props: {book: BookHeader}) => {
 
     const book = props.book
 
@@ -34,4 +34,4 @@ const BookHeader = (props: {book: Book}) => {
     )
 }
 
-export default BookHeader;
+export default BookHeaderView;

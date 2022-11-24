@@ -2,18 +2,18 @@
 import { useState, useEffect } from "react";
 import Book from "../../models/Book";
 import { book1 } from "../../assets/books";
-import BookHeader from "./BookHeader";
+import BookHeaderView from "./BookHeaderView";
 import BookCategory from "../../models/BookCategory";
 import FormElement from "../../components/common/FormElement";
 import DatePickerForm from "../../components/common/DatePickerForm";
 import { privateDecrypt } from "crypto";
-import BookService from "../../services/BookService"
+import BookService from "../../services/BookService";
+import { BookSearchCriteria } from "../../services/BookService";
 
 export const books: Book[] = [
     {
-        id: 1,
         title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
+        authors: [{author_name: 'Andrzej', author_surname: 'Sapkowski'}],
         category: 'Przygodowe',
         publisher: 'SUPERNOWA',
         cover: 'okładka miękka',
@@ -26,165 +26,6 @@ export const books: Book[] = [
         size: '195 x 24 x 125',
         number_of_pages: '332',
         price: 39.92
-    },
-    {
-        id: 2,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    },
-    {
-        id: 3,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    },
-    {
-        id: 4,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    },
-    {
-        id: 5,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    },
-    {
-        id: 6,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    },
-    {
-        id: 7,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    },
-    {
-        id: 8,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    },
-    {
-        id: 9,
-        title: 'Ostatnie życzenie. Wiedźmin. Tom 1',
-        authors: ['Sapkowski Andrzej'],
-        category: 'Przygodowe',
-        publisher: 'SUPERNOWA',
-        cover: 'okładka miękka',
-        language: 'polski',
-        avatar: book1,
-        description: 'Ostatnie życzenie. Wiedźmin, Tom 1',
-        isbn: '978-83-01-00000-1',
-        release_number: 1,
-        release_date: new Date('2014-10-06'),
-        size: '195 x 24 x 125',
-        number_of_pages: '332',
-        price: 39.92
-    }
-]
-
-const mockBookCategories: BookCategory[] = [
-    {
-        id: 1,
-        name: 'Przygodowe'
-    },
-    {
-        id: 2,
-        name: 'Kryminalne'
-    },
-    {
-        id: 3,
-        name: 'Fantastyka'
-    },
-    {
-        id: 4,
-        name: 'Sci-fi'
-    },
-    {
-        id: 5,
-        name: 'Nauka'
     }
 ]
 
@@ -195,35 +36,41 @@ interface BookCategorySelect{
 }
 
 interface Form {
+    title?: string,
     author?: string,
     publisher?: string,
     releaseDate?: Date,
     priceFrom?: number,
-    priceTo?: number
+    priceTo?: number,
+    bookCategories?: BookCategorySelect[]
+}
+
+export interface BookHeader {
+    id: number,
+    title: string,
+    price: number,
+    avatar?: string
 }
 
 const Shop = () => {
 
-    const [bookTitle, setBookTitle] = useState<string>('')
-    const [bookCategories, setBookCategories] = useState<BookCategorySelect[]>(
-        mockBookCategories.map((category: BookCategory) => (
-            {
-                id: category.id,
-                name: category.name,
-                checked: false
-            }
-        )
-    ))
-
     const [form, setForm] = useState<Form>({})
 
-    const [books, setBooks] = useState<Book[]>([])
+    const [books, setBooks] = useState<BookHeader[]>([])
 
     useEffect(() => {
         BookService.getAllAvailableBooks()
         .then((response) => {
             const newBooks = response.data
-            setBooks(newBooks)
+            setBooks(newBooks[0].books)
+
+            const foundCategories = newBooks[1].categories.map((category: BookCategory, index: number) => ({
+                id: index,
+                name: category.name,
+                checked: false
+            }))
+
+            setForm({...form, bookCategories: foundCategories})
             console.log(newBooks)
         })
         .catch((error) => {
@@ -235,25 +82,42 @@ const Shop = () => {
 
         const bookCategoryId: number = +event.target.id
 
-        let newBookCategories: BookCategorySelect[] = [...bookCategories]
+        let newBookCategories: BookCategorySelect[] = form.bookCategories ? form.bookCategories : []
 
         const changedBookCategoryIndex = newBookCategories.map((category: BookCategorySelect) => category.id)
         .indexOf(bookCategoryId)
 
         newBookCategories[changedBookCategoryIndex].checked = checked
 
-        setBookCategories(newBookCategories)
+        setForm({...form, bookCategories: newBookCategories})
+        console.log(newBookCategories)
     }
 
     const getBooksByCriterias = () => {
 
+        const selectedBookCategories: string[] = form.bookCategories ? form.bookCategories
+            .filter((category: BookCategorySelect) => category.checked)
+            .map((category: BookCategorySelect) => category.name)
+        : []
 
+        const criteria: BookSearchCriteria = {
+            title: form.title,
+            genres: selectedBookCategories,
+            author: form.author,
+            publisher: form.publisher,
+            releaseDate: form.releaseDate,
+            minPrice: form.priceFrom,
+            maxPrice: form.priceTo
+        }
 
-
-
+        BookService.getFoundBooks(criteria)
+        .then((response) => {
+            setBooks(response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
     }
-
-
 
     return (
         <Grid container justifyContent="center" marginTop={8}>
@@ -263,8 +127,8 @@ const Shop = () => {
                         <TextField
                             fullWidth   
                             placeholder="Podaj tytuł książki..."
-                            value={bookTitle}
-                            onChange={(event) => setBookTitle(event.target.value)}
+                            value={form.title ? form.title : ''}
+                            onChange={(event) => setForm({...form, title: event.target.value})}
                         />
                     </Grid>
                     <Grid item xs={2}>
@@ -273,7 +137,7 @@ const Shop = () => {
                             variant="contained"
                             color="secondary"
                             sx={{padding: '14px 0px'}}
-                            
+                            onClick={getBooksByCriterias}
                         >
                             Szukaj
                         </Button>
@@ -288,7 +152,7 @@ const Shop = () => {
                         </Typography>
                         <FormControl component="fieldset" variant="standard">
                             <FormGroup>
-                                {bookCategories.map((category: BookCategorySelect) => (
+                                {(form.bookCategories ? form.bookCategories : []).map((category: BookCategorySelect, index: number) => (
                                     <FormControlLabel
                                         key={category.id}
                                         label={category.name}
@@ -367,8 +231,8 @@ const Shop = () => {
                     </Grid>
                 </Grid>
                 <Grid item xs={9} container justifyContent="start" alignItems="center" rowSpacing={6}>
-                    {books.map((b: Book) => (
-                        <BookHeader key={b.id} book={b}/>
+                    {books.map((b: BookHeader) => (
+                        <BookHeaderView key={b.id} book={b}/>
                     ))}
                 </Grid>
             </Grid>

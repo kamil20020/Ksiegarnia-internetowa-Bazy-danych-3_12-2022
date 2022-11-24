@@ -1,7 +1,12 @@
-﻿export default interface Book{
-    id: number,
+﻿export interface Author {
+    author_name: string,
+    author_surname: string
+}
+
+export default interface Book{
+    id: number
     title: string,
-    authors: string[],
+    authors: Author[],
     category: string,
     publisher: string,
     cover: string,
