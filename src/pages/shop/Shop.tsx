@@ -1,5 +1,5 @@
 ﻿import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Book from "../../models/Book";
 import { book1 } from "../../assets/books";
 import BookHeader from "./BookHeader";
@@ -7,6 +7,7 @@ import BookCategory from "../../models/BookCategory";
 import FormElement from "../../components/common/FormElement";
 import DatePickerForm from "../../components/common/DatePickerForm";
 import { privateDecrypt } from "crypto";
+import BookService from "../../services/BookService"
 
 export const books: Book[] = [
     {
@@ -216,6 +217,20 @@ const Shop = () => {
 
     const [form, setForm] = useState<Form>({})
 
+    const [books, setBooks] = useState<Book[]>([])
+
+    useEffect(() => {
+        BookService.getAllAvailableBooks()
+        .then((response) => {
+            const newBooks = response.data
+            setBooks(newBooks)
+            console.log(newBooks)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }, [])
+
     const handleChangeBookCategory = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
 
         const bookCategoryId: number = +event.target.id
@@ -229,6 +244,16 @@ const Shop = () => {
 
         setBookCategories(newBookCategories)
     }
+
+    const getBooksByCriterias = () => {
+
+
+
+
+
+    }
+
+
 
     return (
         <Grid container justifyContent="center" marginTop={8}>
@@ -248,6 +273,7 @@ const Shop = () => {
                             variant="contained"
                             color="secondary"
                             sx={{padding: '14px 0px'}}
+                            
                         >
                             Szukaj
                         </Button>
