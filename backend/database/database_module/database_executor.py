@@ -20,7 +20,6 @@ def get_start_page_data():
     return ret
    
 def find_books(title1: str, genre1: list, author_firstname: str, author_surname:str, publisher1: str, release1: str, min1: str, max1: str):
-    print(title1, genre1, author_firstname, author_surname, publisher1, release1, min1, max1)
     all_entries = None
     dict1 = {}
     dict1['is_available'] = 1
@@ -41,7 +40,6 @@ def find_books(title1: str, genre1: list, author_firstname: str, author_surname:
         dict1['price__lte'] = max2
     all_entries = Books.objects.filter(**dict1).select_related('book_category','publisher')
     list1 = []
-    print("list1" + str(all_entries))
     for i in all_entries:
         good = True
         if genre1 is not None:
@@ -64,7 +62,6 @@ def find_books(title1: str, genre1: list, author_firstname: str, author_surname:
             else:
                 serializer = BooksSerializer(i)
                 list1.append(serializer.data)
-    #print(list1)
     return json.dumps(list1)
 
 def get_book(id: int):
