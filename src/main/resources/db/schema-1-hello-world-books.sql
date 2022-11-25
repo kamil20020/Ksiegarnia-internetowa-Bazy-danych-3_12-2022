@@ -1,5 +1,0 @@
-CREATE TABLE HELLO_WORLD_BOOKS (
-    id int(9) NOT NULL AUTO_INCREMENT,
-    title varchar(100) NOT NULL,
-    PRIMARY KEY (id)
-);

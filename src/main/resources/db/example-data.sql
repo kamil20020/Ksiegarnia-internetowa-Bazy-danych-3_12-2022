@@ -1,2 +1,0 @@
-INSERT INTO HELLO_WORLD_BOOKS(title)
-VALUES('Harry Potter');
