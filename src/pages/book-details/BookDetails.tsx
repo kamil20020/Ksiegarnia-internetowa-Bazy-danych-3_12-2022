@@ -13,6 +13,7 @@ import NotFound from "../errors/NotFound";
 import { setNotificationMessage, setNotificationStatus, setNotificationType } from "../../redux/slices/notificationSlice";
 import BookService from "../../services/BookService";
 import { Author } from "../../models/Book";
+import moment from "moment";
 
 export const DataRow = (props: {title: string, value: string}) => {
     return (
@@ -89,7 +90,7 @@ const BookDetails = () => {
                 </Grid>
                 <DataRow title={"Autorzy"} value={book.authors.map((author: Author) => author.author_name + " " + author.author_surname).join(', ')}/>
                 <DataRow title={"Wydawnictwo"} value={book.publisher}/>
-                <DataRow title={"Data wydania"} value={book.release_date ? new Date(book.release_date).toLocaleDateString() as string : ''}/>
+                <DataRow title={"Data wydania"} value={book.release_date ? moment(book.release_date).format("DD.MM.YYYY").toLocaleString(): ''}/>
                 <DataRow title={"Liczba stron"} value={book.number_of_pages}/>
                 <Grid item container marginTop={2} justifyContent="space-between">
                     <Grid item xs={5}>

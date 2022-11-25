@@ -24,8 +24,8 @@ class BookData{
 
         return axios.get(`${this.apiUrl}/books/find/`, {
             params: {
-              ...searchCriteria
-            }
+              ...searchCriteria, genres: searchCriteria.genres?.join(',')
+            },
         });
     }
 

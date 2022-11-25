@@ -1,4 +1,4 @@
-﻿import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Paper, TextField, Typography } from "@mui/material";
+﻿import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Paper, Slider, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Book from "../../models/Book";
 import { book1 } from "../../assets/books";
@@ -41,8 +41,8 @@ interface Form {
     author: string,
     publisher: string,
     releaseDate?: Date,
-    priceFrom: number,
-    priceTo: number,
+    priceFrom?: number,
+    priceTo?: number,
     bookCategories: BookCategorySelect[]
 }
 
@@ -59,8 +59,6 @@ const Shop = () => {
         title: '',
         author: '',
         publisher: '',
-        priceFrom: -1,
-        priceTo: -1,
         bookCategories: []
     })
 
@@ -130,11 +128,11 @@ const Shop = () => {
             criteria['releaseDate'] = form.releaseDate 
         }
 
-        if(form.priceFrom != -1){
+        if(form.priceFrom){
             criteria['minPrice'] = form.priceFrom 
         }
 
-        if(form.priceTo != -1){
+        if(form.priceTo){
             criteria['maxPrice'] = form.priceTo 
         }
 
@@ -146,6 +144,11 @@ const Shop = () => {
             console.log(error)
         })
     }
+
+    const setPriceRange = (event: Event, newValue: number | number[]) => {
+        const priceRange: number[] = newValue as number[]
+        setForm({...form, priceFrom: priceRange[0], priceTo: priceRange[1]})
+    };
 
     return (
         <Grid container justifyContent="center" marginTop={8}>
@@ -174,7 +177,7 @@ const Shop = () => {
             </Grid>
             <Grid item xs={11} container justifyContent="space-between" marginTop={8} columnSpacing={8}>
                 <Grid item xs={3} container justifyContent="center" alignSelf="start">
-                    <Paper sx={{padding: '10px 20px'}}>
+                    <Paper sx={{padding: '10px 20px', width: 143, height: 233}}>
                         <Typography component="h5" textAlign="left">
                             Gatunek
                         </Typography>
@@ -225,41 +228,28 @@ const Shop = () => {
                                     Cena
                                 </Typography>
                             </Grid>
-                            <Grid item xs={6} container justifyContent="space-between" alignItems="center">
-                                <Grid item xs={5}>
-                                    <OutlinedInput
-                                        fullWidth
-                                        placeholder="Od"
-                                        type="number"
-                                        color="secondary"
-                                        inputProps={{min: 0, max: form.priceTo}}
-                                        value={form.priceFrom}
-                                        onChange={(event) => setForm({...form, priceFrom: +event.target.value})}
-                                    />
-                                </Grid>
+                            <Grid item xs={6} container justifyContent="center" alignItems="center" marginTop={3}>
+                                <Slider
+                                    getAriaLabel={() => 'Temperature range'}
+                                    value={[form.priceFrom, form.priceTo] as number[]}
+                                    onChange={setPriceRange}
+                                    max={1000}
+                                    valueLabelDisplay="auto"
+                                    getAriaValueText={(value: number) => `${value}zł`}
+                                />
                                 <Typography 
-                                    textAlign="start"
+                                    textAlign="center" 
                                     variant="h6"
                                 >
-                                    -
+                                    {`${form.priceFrom !== undefined ? form.priceFrom : 0} zł - `}
+                                    {`${form.priceTo !== undefined ? form.priceTo : 1000} zł`}
                                 </Typography>
-                                <Grid item xs={5}>
-                                    <OutlinedInput
-                                        fullWidth
-                                        placeholder="Do"
-                                        type="number"
-                                        color="secondary"
-                                        inputProps={{min: form.priceFrom}}
-                                        value={form.priceTo}
-                                        onChange={(event) => setForm({...form, priceTo: +event.target.value})}
-                                    />
-                                </Grid>
                             </Grid>
                         </Grid> 
                     </Grid>
                 </Grid>
                 <Grid item xs={9} container justifyContent="start" alignItems="center" rowSpacing={6}>
-                    {books.map((b: BookHeader) => (
+                    {!books ? null : books.map((b: BookHeader) => (
                         <BookHeaderView key={b.id} book={b}/>
                     ))}
                 </Grid>

@@ -14,6 +14,10 @@ import BookDetails from "./pages/book-details/BookDetails";
 import Basket from "./pages/basket/Basket";
 import OrderView from "./pages/order/OrderView";
 import MyOrders from "./pages/header/my-orders/MyOrders";
+import moment from 'moment'
+import 'moment/locale/pl'
+
+moment.locale("pl")
 
 const theme = createTheme(
   {
