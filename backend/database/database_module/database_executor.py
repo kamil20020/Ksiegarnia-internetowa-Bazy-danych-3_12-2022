@@ -19,43 +19,47 @@ def get_start_page_data():
     ret = json.dumps(list1)
     return ret
    
-def find_books(title1: str, genre1: list, author_firstname: str, author_surname:str, publisher1: str, release1: str, min1: str, max1: str):
-    print(title1, genre1, author_firstname, author_surname, publisher1, release1, min1, max1)
+def find_books(title1: str, genre1: str, author1: str, author2:str, publisher1: str, release1: str, min1: str, max1: str, check: str):
+
+    if len(check) != 7:
+        return ""
+    for a in check:
+        if a != '0' and a != '1':
+            return ""
     all_entries = None
     dict1 = {}
     dict1['is_available'] = 1
-    if title1 is not None:
+    if check[0] == '1':
         dict1['title__icontains'] = title1
-    if release1 is not None:
+    if check[4] == '1':
         format = '%Y-%m-%d'
         try:
             date = datetime.datetime.strptime(release1, format).date()
         except ValueError:
             return ""
         dict1['release_date__exact'] = date
-    if min1 is not None:
+    if check[5] == '1':
         min2 = float(min1)
         dict1['price__gte'] = min2
-    if max1 is not None:
+    if check[6] == '1':
         max2 = float(max1)
         dict1['price__lte'] = max2
     all_entries = Books.objects.filter(**dict1).select_related('book_category','publisher')
     list1 = []
-    print("list1" + str(all_entries))
     for i in all_entries:
         good = True
-        if genre1 is not None:
-            if i.book_category.name not in genre1:
+        if check[1] == '1':
+            if genre1 != i.book_category.name:
                 good = False
-        if good is True and publisher1 is not None:
+        if good is True and check[3] == '1':
             if publisher1 != i.publisher.name:
                 good = False
         if good is True:
-            if author_firstname is not None:
+            if check[2] == '1':
                 authors = BookAuthorships.objects.select_related('book_author').filter(book = i.id)
                 contains = False
                 for j in authors:
-                    if j.book_author.firstname == author_firstname and j.book_author.surname == author_surname:
+                    if j.book_author.firstname == author1 and j.book_author.surname == author2:
                         contains = True
                         break                
                 if contains is True:
@@ -64,7 +68,6 @@ def find_books(title1: str, genre1: list, author_firstname: str, author_surname:
             else:
                 serializer = BooksSerializer(i)
                 list1.append(serializer.data)
-    #print(list1)
     return json.dumps(list1)
 
 def get_book(id: int):
