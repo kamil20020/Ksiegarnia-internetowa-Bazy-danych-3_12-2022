@@ -107,7 +107,7 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
         	'read_default_file': '/etc/mysql/my.cnf',
-          'ssl': {'ca': 'DigiCertGlobalRootCA.crt.pem'},
+          'ssl': {'ca': 'backend/DigiCertGlobalRootCA.crt.pem'},
     	},
     }
 }
