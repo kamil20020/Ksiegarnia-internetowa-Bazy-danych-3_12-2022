@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,7 +25,8 @@ public class BookEntity {
     @Column(name = "title", length = 100, nullable = false)
     private String title;
 
-    @Column(name = "description")
+    @Lob
+    @Column(name = "description", columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(name = "isbn", length = 13, unique = true)
@@ -48,9 +50,11 @@ public class BookEntity {
     @Column(name = "numOfBookItems", nullable = false)
     private Integer numOfBookItems;
 
-    @Column(name = "numOfBookPages", length = 20)
+    @Column(name = "numberOfPages", length = 20)
     private String numOfBookPages;
 
+    @Lob
+    @Type(type="org.hibernate.type.ImageType")
     @Column(name = "avatar")
     private byte[] avatar;
 }
