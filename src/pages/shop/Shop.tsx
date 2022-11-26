@@ -1,4 +1,4 @@
-﻿import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Paper, Slider, TextField, Typography } from "@mui/material";
+﻿import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Paper, Slider, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Book from "../../models/Book";
 import { book1 } from "../../assets/books";
@@ -177,7 +177,7 @@ const Shop = () => {
             </Grid>
             <Grid item xs={11} container justifyContent="space-between" marginTop={8} columnSpacing={8}>
                 <Grid item xs={3} container justifyContent="center" alignSelf="start">
-                    <Paper sx={{padding: '10px 20px', width: 143, height: 233}}>
+                    <Paper sx={{padding: '10px 20px', minWidth: 140, minHeight: 233}}>
                         <Typography component="h5" textAlign="left">
                             Gatunek
                         </Typography>
