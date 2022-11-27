@@ -12,10 +12,10 @@ const BookHeaderView = (props: {book: BookHeader}) => {
     const navigate = useNavigate()
 
     return (
-        <Grid item xs={3} container justifyContent="center" className="book-header" paddingBottom={4} 
+        <Grid item xs={3} container justifyContent="center" className="book-header" paddingBottom={4} marginBottom={5}
             onClick={() => navigate(`/book-details/${book.id}`)}
         >
-            <Grid item xs={6} container justifyContent="center" rowSpacing={1}>
+            <Grid item xs={6} container justifyContent="center" rowSpacing={1} height={400}>
                 <Grid item>
                     <CustomImage img={book.avatar}/>
                 </Grid>
