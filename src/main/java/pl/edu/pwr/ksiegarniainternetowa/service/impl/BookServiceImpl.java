@@ -7,6 +7,7 @@ import pl.edu.pwr.ksiegarniainternetowa.model.entity.BookEntity;
 import pl.edu.pwr.ksiegarniainternetowa.repository.BookRepository;
 import pl.edu.pwr.ksiegarniainternetowa.service.BookService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,5 +32,11 @@ public class BookServiceImpl implements BookService {
         // Optional, zeby mozna bylo ewentualnie wyrzucac wyjatki
 
         return bookEntityOpt.get();
+    }
+
+    @Override
+    public List<BookEntity> getByIdList(List<Long> ids) {
+
+        return bookRepository.findAllById(ids);
     }
 }

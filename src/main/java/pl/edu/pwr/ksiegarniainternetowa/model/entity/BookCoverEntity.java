@@ -1,16 +1,15 @@
 package pl.edu.pwr.ksiegarniainternetowa.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Builder
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +23,7 @@ public class BookCoverEntity {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "bookCoverEntity")
+    @JsonIgnore
+    @OneToMany(mappedBy = "cover", fetch = FetchType.LAZY)
     private Set<BookEntity> bookEntities = new HashSet<>();
 }

@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.PersonalDataEntity;
 import pl.edu.pwr.ksiegarniainternetowa.repository.PersonalDataRepository;
-import pl.edu.pwr.ksiegarniainternetowa.service.PersonalDataSerivce;
+import pl.edu.pwr.ksiegarniainternetowa.service.PersonalDataService;
 
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PersonalDataServiceImpl implements PersonalDataSerivce {
+public class PersonalDataServiceImpl implements PersonalDataService {
 
     private PersonalDataRepository personalDataRepository;
 
@@ -52,5 +52,10 @@ public class PersonalDataServiceImpl implements PersonalDataSerivce {
         .build();
 
         return personalDataRepository.save(newPersonalDataEntity).getId();
+    }
+
+    @Override
+    public PersonalDataEntity save(PersonalDataEntity personalDataEntity) {
+        return null;
     }
 }

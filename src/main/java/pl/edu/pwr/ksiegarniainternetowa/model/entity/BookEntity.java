@@ -1,9 +1,7 @@
 package pl.edu.pwr.ksiegarniainternetowa.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -13,7 +11,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Builder
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -60,22 +59,27 @@ public class BookEntity {
     @Column(name = "avatar")
     private byte[] avatar;
 
+    @JsonIgnoreProperties(value = {"id", "bookEntity"})
     @OneToMany(mappedBy = "bookEntity")
-    private Set<BookAutorshipEntity> bookAutorshipEntities = new HashSet<>();
+    private Set<BookAutorshipEntity> authors = new HashSet<>();
 
+    @JsonIgnoreProperties("id")
     @ManyToOne
     @JoinColumn(name = "publisher_id")
-    private PublisherEntity publisherEntity;
+    private PublisherEntity publisher;
 
+    @JsonIgnoreProperties("id")
     @ManyToOne
     @JoinColumn(name = "book_category_id")
-    private BookCategoryEntity bookCategoryEntity;
+    private BookCategoryEntity category;
 
+    @JsonIgnoreProperties("id")
     @ManyToOne
     @JoinColumn(name = "language_id")
-    private LanguageEntity languageEntity;
+    private LanguageEntity language;
 
+    @JsonIgnoreProperties("id")
     @ManyToOne
     @JoinColumn(name = "book_cover_id")
-    private BookCoverEntity bookCoverEntity;
+    private BookCoverEntity cover;
 }

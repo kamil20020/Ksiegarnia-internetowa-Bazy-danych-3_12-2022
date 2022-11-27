@@ -34,4 +34,9 @@ public class ClientServiceImpl implements ClientService {
 
         return foundClientEntityOpt.get();
     }
+
+    @Override
+    public void save(ClientEntity clientEntity) {
+
+    }
 }

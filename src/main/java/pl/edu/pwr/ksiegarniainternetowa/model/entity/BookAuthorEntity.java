@@ -1,5 +1,7 @@
 package pl.edu.pwr.ksiegarniainternetowa.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class BookAuthorEntity {
     @Column(name = "surname", length = 32, nullable = false)
     private String surname;
 
-    @OneToMany(mappedBy = "bookAuthorEntity")
+    @JsonIgnore
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private Set<BookAutorshipEntity> bookAutorshipEntities = new HashSet<>();
 }

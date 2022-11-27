@@ -44,6 +44,8 @@
             <version>8.0.31</version>
         </dependency>
 
+        <!-- SECURITY -->
+
         <!-- OTHER -->
         <dependency>
             <groupId>org.projectlombok</groupId>

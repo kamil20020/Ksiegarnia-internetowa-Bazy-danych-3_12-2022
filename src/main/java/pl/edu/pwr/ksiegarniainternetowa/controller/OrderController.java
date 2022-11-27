@@ -7,13 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.CreateOrder;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.response.OrderWithDetails;
-import pl.edu.pwr.ksiegarniainternetowa.model.entity.BookEntity;
-import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderEntity;
 import pl.edu.pwr.ksiegarniainternetowa.service.OrderService;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8000", "https://booksshop-dr.azurewebsites.net"})
 @RequestMapping(value = "/v1")
 @RequiredArgsConstructor
 public class OrderController {

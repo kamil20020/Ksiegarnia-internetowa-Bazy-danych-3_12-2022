@@ -1,18 +1,17 @@
 package pl.edu.pwr.ksiegarniainternetowa.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Builder
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "BOOKAUTORSHIPS")
+@Table(name = "BOOKAUTHORSHIPS")
 public class BookAutorshipEntity {
 
     @Id
@@ -21,10 +20,9 @@ public class BookAutorshipEntity {
 
     @ManyToOne
     @JoinColumn(name = "book_author_id")
-    private BookAuthorEntity bookAuthorEntity;
+    private BookAuthorEntity author;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
     private BookEntity bookEntity;
-
 }

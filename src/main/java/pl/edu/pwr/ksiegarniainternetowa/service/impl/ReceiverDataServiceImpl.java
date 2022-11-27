@@ -7,21 +7,21 @@ import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.PersonalDataEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.ReceiverDataEntity;
 import pl.edu.pwr.ksiegarniainternetowa.repository.ReceiverDataRepository;
-import pl.edu.pwr.ksiegarniainternetowa.service.PersonalDataSerivce;
+import pl.edu.pwr.ksiegarniainternetowa.service.PersonalDataService;
 import pl.edu.pwr.ksiegarniainternetowa.service.ReceiverDataService;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReceiverDateServiceImpl implements ReceiverDataService {
+public class ReceiverDataServiceImpl implements ReceiverDataService {
 
     private final ReceiverDataRepository receiverDataRepository;
-    private final PersonalDataSerivce personalDataSerivce;
+    private final PersonalDataService personalDataService;
 
     @Override
     public ReceiverDataEntity create(Long personalDataId) throws EntityNotFoundException {
 
-        PersonalDataEntity personalDataEntity = personalDataSerivce.getById(personalDataId);
+        PersonalDataEntity personalDataEntity = personalDataService.getById(personalDataId);
 
         ReceiverDataEntity receiverDataEntity = ReceiverDataEntity.builder()
             .personalDataEntity(personalDataEntity)

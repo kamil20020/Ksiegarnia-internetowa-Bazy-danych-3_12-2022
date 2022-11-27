@@ -9,4 +9,6 @@ public interface ClientService {
 
     boolean existsById(Long id);
     ClientEntity getById(Long id);
+
+    void save(ClientEntity clientEntity);
 }

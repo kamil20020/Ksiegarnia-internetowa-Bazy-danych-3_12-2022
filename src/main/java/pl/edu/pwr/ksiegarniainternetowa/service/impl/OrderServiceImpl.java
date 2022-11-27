@@ -31,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final ClientService clientService;
     private final BookItemService bookItemService;
     private final BookService bookService;
-    private final PersonalDataSerivce personalDataSerivce;
+    private final PersonalDataService personalDataService;
     private final ReceiverDataService receiverDataService;
     private final OrderStatusService orderStatusService;
     private final OrderItemService orderItemService;
@@ -129,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
         ReceiverDataEntity receiverDataEntity = null;
 
         if(personalData != null){
-            Long personalDataId = personalDataSerivce.create(personalData);
+            Long personalDataId = personalDataService.create(personalData);
             receiverDataEntity = receiverDataService.create(personalDataId);
         }
 
