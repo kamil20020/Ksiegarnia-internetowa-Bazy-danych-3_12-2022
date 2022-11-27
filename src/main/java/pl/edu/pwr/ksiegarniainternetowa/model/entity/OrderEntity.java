@@ -1,5 +1,6 @@
 package pl.edu.pwr.ksiegarniainternetowa.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Data
@@ -43,4 +45,8 @@ public class OrderEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "receivers_data_id", nullable = false)
     private ReceiverDataEntity receiverDataEntity;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "orderEntity")
+    private List<OrderItemEntity> orderItemEntityList;
 }

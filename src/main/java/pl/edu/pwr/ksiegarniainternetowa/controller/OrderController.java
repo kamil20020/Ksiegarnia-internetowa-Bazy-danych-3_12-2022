@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.CreateOrder;
+import pl.edu.pwr.ksiegarniainternetowa.model.api.response.OrderWithDetails;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.BookEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderEntity;
 import pl.edu.pwr.ksiegarniainternetowa.service.OrderService;
@@ -31,7 +32,7 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Podano nieprawidłowe id klienta");
         }
 
-        List<OrderEntity> foundOrders;
+        List<OrderWithDetails> foundOrders;
 
         try{
             foundOrders = orderService.getOrdersByClientId(clientId);
@@ -58,11 +59,13 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano produktów");
         }
 
-        Long placedOrderId;
+        Long placedOrderId = null;
 
         try{
             placedOrderId = orderService.placeOrder(
-                createOrderRequest.getClientId(), createOrderRequest.getBasketItems()
+                createOrderRequest.getClientId(),
+                createOrderRequest.getPersonalData(),
+                createOrderRequest.getBasketItems()
             );
         }
         catch(EntityNotFoundException e){

@@ -9,6 +9,8 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @Data
@@ -29,16 +31,16 @@ public class BookEntity {
     @Column(name = "description", columnDefinition = "LONGTEXT")
     private String description;
 
-    @Column(name = "isbn", length = 13, unique = true)
+    @Column(name = "isbn", length = 20, unique = true)
     private String isbn;
 
-    @Column(name = "releaseNumber", length = 13)
+    @Column(name = "releaseNumber")
     private Integer releaseNumber;
 
     @Column(name = "releaseDate", nullable = false)
     private LocalDateTime releaseDate;
 
-    @Column(name = "size", length = 11)
+    @Column(name = "size")
     private String size;
 
     @Column(name = "price", nullable = false)
@@ -57,4 +59,23 @@ public class BookEntity {
     @Type(type="org.hibernate.type.ImageType")
     @Column(name = "avatar")
     private byte[] avatar;
+
+    @OneToMany(mappedBy = "bookEntity")
+    private Set<BookAutorshipEntity> bookAutorshipEntities = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "publisher_id")
+    private PublisherEntity publisherEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "book_category_id")
+    private BookCategoryEntity bookCategoryEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "language_id")
+    private LanguageEntity languageEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "book_cover_id")
+    private BookCoverEntity bookCoverEntity;
 }

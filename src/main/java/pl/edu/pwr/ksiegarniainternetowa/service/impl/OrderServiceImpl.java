@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
+import pl.edu.pwr.ksiegarniainternetowa.mapper.DateTimeMapper;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.CreateOrder;
+import pl.edu.pwr.ksiegarniainternetowa.model.api.response.OrderWithDetails;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.*;
 import pl.edu.pwr.ksiegarniainternetowa.repository.OrderRepository;
 import pl.edu.pwr.ksiegarniainternetowa.service.*;
@@ -13,8 +15,12 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,14 +36,51 @@ public class OrderServiceImpl implements OrderService {
     private final OrderStatusService orderStatusService;
     private final OrderItemService orderItemService;
 
+    private final DateTimeMapper dateTimeMapper = DateTimeMapper.INSTANCE;
+
     @Override
-    public List<OrderEntity> getOrdersByClientId(Long clientId) throws EntityNotFoundException{
+    public List<OrderWithDetails> getOrdersByClientId(Long clientId) throws EntityNotFoundException{
 
         if(!clientService.existsById(clientId)){
             throw new EntityNotFoundException("Nie istnieje klient o takim id");
         }
 
-        return orderRepository.findAllByClientEntityId(clientId);
+        List<OrderEntity> foundOrders = orderRepository.findAllByClientEntityId(clientId);
+
+       return foundOrders.stream().map(orderEntity -> {
+
+           OffsetDateTime offsetCreationDateTime = dateTimeMapper.localDateTimeToOffsetDateTime(
+               orderEntity.getCreationDate()
+           );
+
+           Map<Long, OrderWithDetails.OrderBookDetails> booksQuantities = new HashMap();
+
+           orderEntity.getOrderItemEntityList().stream().forEach(orderItemEntity -> {
+               Long bookId = orderItemEntity.getBookItemEntity().getBookEntity().getId();
+
+               if(booksQuantities.containsKey(bookId)) {
+                    OrderWithDetails.OrderBookDetails orderBookEntity = booksQuantities.get(bookId);
+                    orderBookEntity.setQuantity(orderBookEntity.getQuantity());
+               }
+               else {
+                   booksQuantities.put(
+                       bookId,
+                       new OrderWithDetails.OrderBookDetails(
+                          orderItemEntity.getBookItemEntity().getBookEntity(),
+                          1
+                       )
+                   );
+               }
+           });
+
+           return OrderWithDetails.builder()
+               .id(orderEntity.getId())
+               .creationDate(offsetCreationDateTime)
+               .totalPrice(orderEntity.getTotalPrice())
+               .orderStatusEntity(orderEntity.getOrderStatusEntity())
+               .books((List<OrderWithDetails.OrderBookDetails>) booksQuantities.values())
+           .build();
+       }).collect(Collectors.toList());
     }
 
     @Transactional
@@ -71,7 +114,9 @@ public class OrderServiceImpl implements OrderService {
                 );
             }
 
-            foundAvailableBookItems.addAll(bookItemService.getAvailableBookItemsByBookId(bookId));
+            foundAvailableBookItems.addAll(
+                bookItemService.getAvailableBookItemsByBookId(bookId)
+            );
 
             totalPrice.add(foundBook.getPrice());
         }
