@@ -12,7 +12,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
+
     private final BookRepository bookRepository;
+
+    @Override
+    public boolean existsById(Long bookId) {
+
+        return bookRepository.existsById(bookId);
+    }
 
     @Override
     public BookEntity getBookById(Long bookId) {

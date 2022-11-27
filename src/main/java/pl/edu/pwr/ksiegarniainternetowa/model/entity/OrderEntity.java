@@ -24,7 +24,7 @@ public class OrderEntity {
     private Long id;
 
     @Column(name = "creation_date", nullable = false)
-    private LocalDateTime localDateTime;
+    private LocalDateTime creationDate;
 
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;

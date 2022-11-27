@@ -24,6 +24,9 @@ public class BookItemEntity {
     @Column(name = "code", unique = true, nullable = false)
     private Integer code;
 
+    @Column(name = "is_purchased", nullable = false)
+    private Boolean isPurchased;
+
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "book_id", nullable = false)
