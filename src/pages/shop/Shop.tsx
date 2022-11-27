@@ -73,7 +73,7 @@ const Shop = () => {
             const foundCategories = newBooks[1].categories.map((category: BookCategory, index: number) => ({
                 id: index,
                 name: category.name,
-                checked: true
+                checked: false
             }))
 
             setForm({...form, bookCategories: foundCategories})
@@ -110,7 +110,7 @@ const Shop = () => {
             criteria['title'] = form.title
         }
 
-        if(selectedBookCategories.length < form.bookCategories.length) {
+        if(selectedBookCategories.length < form.bookCategories.length && selectedBookCategories.length !== 0) {
 
             criteria['genres'] = [...selectedBookCategories]
             
