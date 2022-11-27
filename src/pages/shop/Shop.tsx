@@ -33,7 +33,7 @@ export const books: Book[] = [
 interface BookCategorySelect{
     id: number,
     name: string,
-    checked: boolean
+    checked: boolean 
 }
 
 interface Form {
@@ -73,7 +73,7 @@ const Shop = () => {
             const foundCategories = newBooks[1].categories.map((category: BookCategory, index: number) => ({
                 id: index,
                 name: category.name,
-                checked: false
+                checked: true
             }))
 
             setForm({...form, bookCategories: foundCategories})
@@ -110,14 +110,10 @@ const Shop = () => {
             criteria['title'] = form.title
         }
 
-        if(form.bookCategories.length != 0){
+        if(selectedBookCategories.length < form.bookCategories.length) {
 
-            if(form.bookCategories.filter(c => c.checked).length == 0){
-                criteria['genres'] = [form.bookCategories.map(c => c.name)]
-            }
-            else{
-                criteria['genres'] = [...selectedBookCategories]
-            }
+            criteria['genres'] = [...selectedBookCategories]
+            
         }
 
         if(form.author !== ''){
