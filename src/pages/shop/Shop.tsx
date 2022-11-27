@@ -77,7 +77,6 @@ const Shop = () => {
             }))
 
             setForm({...form, bookCategories: foundCategories})
-            console.log(newBooks)
         })
         .catch((error) => {
             console.log(error)
@@ -96,7 +95,6 @@ const Shop = () => {
         newBookCategories[changedBookCategoryIndex].checked = checked
 
         setForm({...form, bookCategories: newBookCategories})
-        console.log(newBookCategories)
     }
 
     const getBooksByCriterias = () => {
@@ -109,11 +107,17 @@ const Shop = () => {
         let criteria: any = {}
 
         if(form.title !== ''){
-            criteria['title'] = form.title 
+            criteria['title'] = form.title
         }
 
         if(form.bookCategories.length != 0){
-            criteria['genres'] = [...selectedBookCategories]
+
+            if(form.bookCategories.filter(c => c.checked).length == 0){
+                criteria['genres'] = [form.bookCategories.map(c => c.name)]
+            }
+            else{
+                criteria['genres'] = [...selectedBookCategories]
+            }
         }
 
         if(form.author !== ''){

@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Book from "../../models/Book";
-import { BasketProduct } from "../../redux/slices/basketSlice";
+import { BasketProduct, clear } from "../../redux/slices/basketSlice";
 import { RootState } from "../../redux/store";
+import BookService from "../../services/BookService";
 import { books } from "../shop/Shop";
 import BasketProductView from "./BasketProductView";
 
@@ -16,31 +17,52 @@ export interface BasketProductWithDetails {
 const Basket = () => {
 
     const basketProducts = useSelector((state: RootState) => state.basket).products
+    const totalPrice = useSelector((state: RootState) => state.basket).totalPrice as number
 
     const [basketProductsWithDetails, setBasketProductsWithDetails] = useState<BasketProductWithDetails[]>([])
-    const [totalPrice, setTotalPrice] = useState<number>(0);
 
     const dispatch = useDispatch()
+
     const navigate = useNavigate()
 
     useEffect(() => {
 
         let newBasketProductsWithDetails: BasketProductWithDetails[] = []
 
-        let newTotalPrice = 0
+        const basketBooksIds = basketProducts.map(item => item.id)
 
-        basketProducts.forEach((basketProduct: BasketProduct) => {
-            const book = books.filter((book: Book) => book.id == basketProduct.id)[0]
-            newBasketProductsWithDetails.push({
-                product: book,
-                quantity: basketProduct.quantity
-            });
-            newTotalPrice += book.price * basketProduct.quantity
+        BookService.getBooksByIds(basketBooksIds)
+        .then((response) => {
+            const foundBooks = response.data
+
+            basketProducts.forEach((basketProduct: BasketProduct) => {
+                const book = foundBooks.filter((book: Book) => book.id == basketProduct.id)[0]
+                newBasketProductsWithDetails.push({
+                    product: book,
+                    quantity: basketProduct.quantity
+                });
+            })
+
+            setBasketProductsWithDetails(newBasketProductsWithDetails)
         })
+        .catch((error) => {
+            console.log(error)
+        })
+    }, [])
 
+    const handleUpdateQuantity = (id: number, quantity: number) => {
+        let newBasketProductsWithDetails = [...basketProductsWithDetails]
+        const index = basketProductsWithDetails.map(p => p.product.id).indexOf(id)
+        newBasketProductsWithDetails[index].quantity = quantity
         setBasketProductsWithDetails(newBasketProductsWithDetails)
-        setTotalPrice(+newTotalPrice.toFixed(2))
-    }, [basketProducts])
+    }
+
+    const handleRemove = (id: number) => {
+        const index = basketProductsWithDetails.map(p => p.product.id).indexOf(id)
+        let newBasketProductsWithDetails = [...basketProductsWithDetails];
+        newBasketProductsWithDetails.splice(index, 1)
+        setBasketProductsWithDetails(newBasketProductsWithDetails)
+    }
 
     return (
         <Grid item xs={10} alignSelf="start" container justifyContent="space-between" marginTop={8}>
@@ -52,14 +74,20 @@ const Basket = () => {
                 </Grid>
                 <Grid item container>
                     {basketProductsWithDetails.map((book: BasketProductWithDetails, index: number) => (
-                        <BasketProductView key={book.product.id} book={book} index={index}/>
+                        <BasketProductView 
+                            key={book.product.id} 
+                            book={book} 
+                            index={index} 
+                            handleRemove={handleRemove} 
+                            handleUpdateQuantity={handleUpdateQuantity}
+                        />
                     ))}
                 </Grid>
             </Grid>
             <Grid item xs={5} container direction="column" marginTop={14} rowSpacing={4}>
                 <Grid item container justifyContent="center">
                     <Typography variant="h4" textAlign="end">
-                        Łączna kwota: {totalPrice} zł
+                        Łączna kwota: {totalPrice == 0 ? 0 : totalPrice.toFixed(2)} zł
                     </Typography>
                 </Grid>
                 <Grid item container justifyContent="center">

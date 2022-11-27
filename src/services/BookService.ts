@@ -13,16 +13,26 @@ export interface BookSearchCriteria {
 
 class BookData{
 
-    private apiUrl: string = `${process.env.REACT_APP_API_2 as string}`
+    private apiUrl1: string = `${process.env.REACT_APP_API_1 as string}/v1`
+    private apiUrl2: string = `${process.env.REACT_APP_API_2 as string}`
 
     getBookData(id: number){
 
-        return axios.get(`${this.apiUrl}/book/${id}`);
+        return axios.get(`${this.apiUrl2}/book/${id}`);
+    }
+
+    getBooksByIds(ids: number[]){
+
+        return axios.get(`${this.apiUrl1}/books/by-Ids`, {
+            params: {
+                bookIds: ids.join(',')
+            }
+        });
     }
 
     getFoundBooks(searchCriteria: BookSearchCriteria){
 
-        return axios.get(`${this.apiUrl}/books/find/`, {
+        return axios.get(`${this.apiUrl2}/books/find/`, {
             params: {
               ...searchCriteria, genres: searchCriteria.genres?.join(',')
             },
@@ -31,7 +41,7 @@ class BookData{
 
     getAllAvailableBooks(){
 
-        return axios.get(`${this.apiUrl}/books/all`);
+        return axios.get(`${this.apiUrl2}/books/all`);
     }
 }
 export default new BookData();

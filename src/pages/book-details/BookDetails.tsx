@@ -72,7 +72,7 @@ const BookDetails = () => {
     
     const handleAddToBasket = () => {
         if(!doBasketHave()){
-            dispatch(addProduct(+bookId))
+            dispatch(addProduct({id: book.id, price: book.price}))
             dispatch(setNotificationMessage("Dodano produkt do koszyka"));
             dispatch(setNotificationType("success"));
             dispatch(setNotificationStatus(true));
