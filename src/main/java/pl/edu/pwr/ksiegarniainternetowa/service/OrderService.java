@@ -10,5 +10,8 @@ import java.util.List;
 public interface OrderService {
 
     List<OrderWithDetails> getOrdersByClientId(Long clientId);
+
+    void checkOrder(Long clientId, PersonalDataEntity personalData, List<CreateOrder.BasketItem> basketItemList);
+
     Long placeOrder(Long clientId, PersonalDataEntity personalData, List<CreateOrder.BasketItem> basketItemList);
 }

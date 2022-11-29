@@ -43,6 +43,37 @@ public class OrderController {
         return ResponseEntity.ok(foundOrders);
     }
 
+    @PostMapping("/order/check")
+    public ResponseEntity checkOrder(@RequestBody CreateOrder createOrderRequest){
+        if(createOrderRequest == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano danych zamówienia");
+        }
+
+        if(createOrderRequest.getClientId() == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano id klienta");
+        }
+
+        if(createOrderRequest.getBasketItems() == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano produktów");
+        }
+
+        try{
+            orderService.checkOrder(
+                createOrderRequest.getClientId(),
+                createOrderRequest.getPersonalData(),
+                createOrderRequest.getBasketItems()
+            );
+        }
+        catch(EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch(IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @PostMapping("/order")
     public ResponseEntity placeOrder(@RequestBody CreateOrder createOrderRequest){
 
@@ -58,7 +89,7 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano produktów");
         }
 
-        Long placedOrderId = null;
+        Long placedOrderId;
 
         try{
             placedOrderId = orderService.placeOrder(
@@ -68,7 +99,10 @@ public class OrderController {
             );
         }
         catch(EntityNotFoundException e){
-
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch(IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(placedOrderId);

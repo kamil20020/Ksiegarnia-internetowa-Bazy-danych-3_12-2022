@@ -28,6 +28,9 @@ public class OrderEntity {
     @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
 
+    @Column(name = "fullfillment_date")
+    private LocalDateTime fullfillmentDate;
+
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
 
@@ -43,7 +46,7 @@ public class OrderEntity {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "receivers_data_id", nullable = false)
+    @JoinColumn(name = "receivers_data_id")
     private ReceiverDataEntity receiverDataEntity;
 
     @JsonIgnore

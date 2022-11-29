@@ -53,7 +53,17 @@ public class OrderServiceImpl implements OrderService {
                orderEntity.getCreationDate()
            );
 
+           OffsetDateTime fullfillmentDate = null;
+
+           if(orderEntity.getFullfillmentDate() != null){
+               fullfillmentDate = dateTimeMapper.localDateTimeToOffsetDateTime(
+                   orderEntity.getFullfillmentDate()
+               );
+           }
+
            Map<Long, OrderWithDetails.OrderBookDetails> booksQuantities = new HashMap();
+
+           BigDecimal totalPrice = BigDecimal.valueOf(0);
 
            orderEntity.getOrderItemEntityList().stream().forEach(orderItemEntity -> {
                Long bookId = orderItemEntity.getBookItemEntity().getBookEntity().getId();
@@ -71,16 +81,51 @@ public class OrderServiceImpl implements OrderService {
                        )
                    );
                }
+
+               totalPrice.add(orderItemEntity.getPrice());
            });
 
            return OrderWithDetails.builder()
                .id(orderEntity.getId())
                .creationDate(offsetCreationDateTime)
-               .totalPrice(orderEntity.getTotalPrice())
-               .orderStatusEntity(orderEntity.getOrderStatusEntity())
-               .books((List<OrderWithDetails.OrderBookDetails>) booksQuantities.values())
+               .fullfillmentDate(fullfillmentDate)
+               .totalPrice(totalPrice)
+               .status(orderEntity.getOrderStatusEntity())
+               .books(new ArrayList<OrderWithDetails.OrderBookDetails>(booksQuantities.values()))
            .build();
        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void checkOrder(
+        Long clientId,  PersonalDataEntity personalData, List<CreateOrder.BasketItem> basketItemList
+    ){
+        if(basketItemList == null || basketItemList.isEmpty()){
+            throw new IllegalStateException("Koszyk jest pusty");
+        }
+
+        for(CreateOrder.BasketItem basketItem : basketItemList) {
+
+            Long bookId = basketItem.getBookId();
+            Integer quantity = basketItem.getQuantity();
+
+            BookEntity foundBook = bookService.getBookById(bookId);
+
+            if (!foundBook.getIsAvailable()) {
+                throw new IllegalStateException(
+                        "Książka o tytule " + foundBook.getTitle() + " jest niedostępna"
+                );
+            }
+
+            int quantityDiff = quantity - foundBook.getNumOfBookItems();
+
+            if (quantityDiff > 0) {
+                throw new IllegalStateException(
+                        "Nie ma na stanie odpowiedniej liczby książek dla tytułu " + foundBook.getTitle() +
+                                " brakuje " + quantityDiff + " sztuk"
+                );
+            }
+        }
     }
 
     @Transactional
@@ -88,6 +133,10 @@ public class OrderServiceImpl implements OrderService {
     public Long placeOrder(Long clientId, PersonalDataEntity personalData, List<CreateOrder.BasketItem> basketItemList)
         throws EntityNotFoundException, IllegalStateException
     {
+        if(basketItemList == null || basketItemList.isEmpty()){
+            throw new IllegalStateException("Koszyk jest pusty");
+        }
+
         BigDecimal totalPrice = BigDecimal.valueOf(0);
 
         List<BookItemEntity> foundAvailableBookItems = new ArrayList<>();
@@ -115,7 +164,9 @@ public class OrderServiceImpl implements OrderService {
             }
 
             foundAvailableBookItems.addAll(
-                bookItemService.getAvailableBookItemsByBookId(bookId)
+                bookItemService.getAvailableBookItemsByBookId(bookId).stream()
+                    .limit(quantity)
+                .collect(Collectors.toList())
             );
 
             totalPrice.add(foundBook.getPrice());
@@ -141,10 +192,12 @@ public class OrderServiceImpl implements OrderService {
             .totalPrice(totalPrice)
         .build();
 
+        OrderEntity createdOrder = orderRepository.save(placedOrder);
+
         foundAvailableBookItems.forEach(bookItemEntity -> {
             bookItemEntity.setIsPurchased(true);
 
-            orderItemService.create(placedOrder, bookItemEntity, bookItemEntity.getBookEntity().getPrice());
+            orderItemService.create(createdOrder, bookItemEntity, bookItemEntity.getBookEntity().getPrice());
 
             int numOfBookItems = bookItemEntity.getBookEntity().getNumOfBookItems();
             bookItemEntity.getBookEntity().setNumOfBookItems(numOfBookItems - 1);

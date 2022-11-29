@@ -27,13 +27,14 @@ public class OrderWithDetails {
     @AllArgsConstructor
     public static class OrderBookDetails {
 
-        private BookEntity bookEntity;
+        private BookEntity book;
         private Integer quantity;
     }
 
     private Long id;
     private OffsetDateTime creationDate;
+    private OffsetDateTime fullfillmentDate;
     private BigDecimal totalPrice;
-    private OrderStatusEntity orderStatusEntity;
+    private OrderStatusEntity status;
     private List<OrderBookDetails> books;
 }

@@ -19,7 +19,7 @@ public class CreateOrder {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public class BasketItem{
+    public static class BasketItem{
 
         private Long bookId;
         private Integer quantity;
