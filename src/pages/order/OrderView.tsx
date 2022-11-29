@@ -2,15 +2,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import ValidatedForm from "../../components/common/ValidatedForm";
 import Book from "../../models/Book";
-import { BasketProduct } from "../../redux/slices/basketSlice";
+import { BasketProduct, clear } from "../../redux/slices/basketSlice";
 import { setNotificationMessage, setNotificationType, setNotificationStatus } from "../../redux/slices/notificationSlice";
 import { RootState } from "../../redux/store";
 import FormValidator from "../../services/FormValidator";
+import OrderService, { BasicBasketProduct, CreateOrder } from "../../services/OrderService";
 import { BasketProductWithDetails } from "../basket/Basket";
 import BasketProductView from "../basket/BasketProductView";
-import { books } from "../shop/Shop";
 
 interface FormFields {
     name: string;
@@ -45,13 +46,14 @@ const OrderView = () => {
 
     const dispatch = useDispatch()
 
+    const navigate = useNavigate()
+
     useEffect(() => {
 
         let newTotalPrice = 0
 
         basketProducts.forEach((basketProduct: BasketProduct) => {
-            const book = books.filter((book: Book) => book.id == basketProduct.id)[0]
-            newTotalPrice += book.price * basketProduct.quantity
+            newTotalPrice += basketProduct.price * basketProduct.quantity
         })
 
         setTotalPrice(+newTotalPrice.toFixed(2))
@@ -101,10 +103,26 @@ const OrderView = () => {
     
       const handleSubmit = () => {
         if (!validateForm()) return;
-    
-        dispatch(setNotificationMessage("Złożono zamówienie"));
-        dispatch(setNotificationType("success"));
-        dispatch(setNotificationStatus(true));
+
+        const createOrder: CreateOrder = {
+            clientId: 1,
+            basketItems: basketProducts.map((p: BasketProduct) => ({bookId: p.id, quantity: p.quantity}))
+        }
+
+        OrderService.placeOrder(createOrder)
+        .then((response) => {
+            dispatch(setNotificationMessage(`Złożono zamówienie nr ${response.data}`));
+            dispatch(setNotificationType("success"));
+            dispatch(setNotificationStatus(true));
+            dispatch(clear())
+
+            navigate('../')
+        })
+        .catch((error) => {
+            dispatch(setNotificationMessage(error.response.data));
+            dispatch(setNotificationType("error"));
+            dispatch(setNotificationStatus(true));
+        })
       };
 
     return (

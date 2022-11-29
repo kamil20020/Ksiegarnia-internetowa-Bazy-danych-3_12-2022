@@ -1,8 +1,6 @@
 ﻿import { Grid, Typography, IconButton } from "@mui/material";
 import CustomImage from "../../../components/common/CustomImage";
 import Book from "../../../models/Book";
-import { removeProduct, updateProductQuantity } from "../../../redux/slices/basketSlice";
-import { BasketProductWithDetails } from "../../basket/Basket";
 
 const OrderProduct = (props: {book: Book, quantity: number}) => {
 
@@ -17,8 +15,8 @@ const OrderProduct = (props: {book: Book, quantity: number}) => {
                 <Grid item xs={2} container alignItems="center">
                     <Typography variant="h5">{book.title}</Typography>
                 </Grid>
-                <Grid item xs={6} marginTop={1.5}>
-                    <Typography variant="h6">{book.authors.join(' ')}</Typography>
+                <Grid item xs={4} marginTop={1.5}>
+                    <Typography variant="h6">{book.authors.map((a: any) => a.author.firstname + a.author.surname).join(', ')}</Typography>
                 </Grid>
                 <Grid item xs={2} container justifyContent="space-between" alignItems="center">
                     <Grid item xs={6} container alignItems="center">

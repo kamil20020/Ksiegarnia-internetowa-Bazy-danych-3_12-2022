@@ -14,7 +14,7 @@ const Header = () => {
     <Grid container component="nav" alignItems="center">
       <Grid item xs={5} justifySelf="start">
         <Link to="/" className="nice-link">
-          <img src={logo} width="100" />
+          <img src={logo} width="100" alt="logo" />
         </Link>
       </Grid>
       <Grid
@@ -84,7 +84,7 @@ const Header = () => {
         )}
         <Grid item>
           <Link to="/basket" className="nice-link">
-            <img src={basket} width="60" />
+            <img src={basket} width="60" alt="koszyk"/>
           </Link>
         </Grid>
       </Grid>

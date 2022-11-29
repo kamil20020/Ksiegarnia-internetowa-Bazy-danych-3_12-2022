@@ -21,8 +21,6 @@ const BasketProductView = (props: BasketProductViewProps) => {
 
     const dispatch = useDispatch()
 
-    console.log(book.price)
-
     return (
         <Grid item container border="1px solid black" padding={2} marginBottom={4}>
             <Grid item xs={3} container justifyContent="center" marginRight={6}>

@@ -6,6 +6,6 @@ export default interface Order{
     status: OrderStatus,
     books: Book[],
     totalPrice: number,
-    creationDate: Date
+    creationDate: Date,
     fulfillmentDate?: Date
 }

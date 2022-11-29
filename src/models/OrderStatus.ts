@@ -1,6 +1,4 @@
-﻿export enum OrderStatus{
-    CREATED="Utworzone", 
-    ACCEPTED="Przyjęte",
-    PROCESSED="W trakcie realizacji",
-    COMPLETED="Zrealizowane"
+﻿export interface OrderStatus{
+    id: number,
+    name: string
 }

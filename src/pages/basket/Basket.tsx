@@ -8,6 +8,8 @@ import { RootState } from "../../redux/store";
 import BookService from "../../services/BookService";
 import { books } from "../shop/Shop";
 import BasketProductView from "./BasketProductView";
+import OrderService from "../../services/OrderService";
+import { CreateOrder } from "../../services/OrderService";
 
 export interface BasketProductWithDetails {
     product: Book,
@@ -64,6 +66,26 @@ const Basket = () => {
         setBasketProductsWithDetails(newBasketProductsWithDetails)
     }
 
+    const handleNavigateOrder = () => {
+
+        const createOrder: CreateOrder = {
+            clientId: 1,
+            basketItems: basketProducts.map((p: BasketProduct) => ({bookId: p.id, quantity: p.quantity}))
+        }
+
+        OrderService.placeOrder(createOrder)
+        .then(() => {
+            navigate('/order')
+        })
+        .catch((error) => {
+            dispatch(setNotificationMessage(error.response.data));
+            dispatch(setNotificationType("error"));
+            dispatch(setNotificationStatus(true));
+        })
+
+        navigate('/order')
+    }
+
     return (
         <Grid item xs={10} alignSelf="start" container justifyContent="space-between" marginTop={8}>
             <Grid item xs={6} container direction="column">
@@ -91,13 +113,15 @@ const Basket = () => {
                     </Typography>
                 </Grid>
                 <Grid item container justifyContent="center">
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => navigate('/order')}
-                    >
-                        Złóż zamówienie
-                    </Button>
+                    {basketProducts.length > 0 &&
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleNavigateOrder}
+                        >
+                            Złóż zamówienie
+                        </Button>
+                    }
                 </Grid>
             </Grid>
         </Grid>
