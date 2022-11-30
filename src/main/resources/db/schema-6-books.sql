@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `is_available` tinyint(1) NOT NULL,
   `num_of_book_items` int(11) NOT NULL,
   `number_of_pages` varchar(20) COLLATE utf8_polish_ci NOT NULL,
-  `avatar` longblob NOT NULL,
+  `avatar` longblob,
   `book_category_id` bigint(20) NOT NULL,
   `book_cover_id` bigint(20) NOT NULL,
   `language_id` bigint(20) NOT NULL,

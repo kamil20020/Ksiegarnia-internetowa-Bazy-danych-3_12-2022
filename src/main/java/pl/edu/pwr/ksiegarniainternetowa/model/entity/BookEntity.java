@@ -33,10 +33,10 @@ public class BookEntity {
     @Column(name = "isbn", length = 20, unique = true)
     private String isbn;
 
-    @Column(name = "releaseNumber")
+    @Column(name = "release_number")
     private Integer releaseNumber;
 
-    @Column(name = "releaseDate", nullable = false)
+    @Column(name = "release_date", nullable = false)
     private LocalDateTime releaseDate;
 
     @Column(name = "size")
@@ -45,13 +45,14 @@ public class BookEntity {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "isAvailable", nullable = false)
+    @Basic
+    @Column(name = "is_available", columnDefinition = "BIT", length = 1,  nullable = false)
     private Boolean isAvailable;
 
-    @Column(name = "numOfBookItems", nullable = false)
+    @Column(name = "num_of_book_items", nullable = false)
     private Integer numOfBookItems;
 
-    @Column(name = "numberOfPages", length = 20)
+    @Column(name = "number_of_pages", length = 20)
     private String numOfBookPages;
 
     @Lob

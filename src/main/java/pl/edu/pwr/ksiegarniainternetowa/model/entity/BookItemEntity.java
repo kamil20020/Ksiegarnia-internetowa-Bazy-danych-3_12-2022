@@ -24,7 +24,8 @@ public class BookItemEntity {
     @Column(name = "code", unique = true, nullable = false)
     private Integer code;
 
-    @Column(name = "is_purchased", nullable = false)
+    @Basic
+    @Column(name = "is_purchased", columnDefinition = "BIT", length = 1, nullable = false)
     private Boolean isPurchased;
 
     @ManyToOne(optional = false)

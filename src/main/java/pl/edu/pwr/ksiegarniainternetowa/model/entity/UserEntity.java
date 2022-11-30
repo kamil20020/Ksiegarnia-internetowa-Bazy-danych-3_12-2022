@@ -25,6 +25,7 @@ public class UserEntity {
     @Column(name = "password", length = 256, nullable = false)
     private char[] password;
 
-    @Column(name = "is_employee", nullable = false)
+    @Basic
+    @Column(name = "is_employee", columnDefinition = "BIT", length = 1, nullable = false)
     private Boolean isEmployee;
 }
