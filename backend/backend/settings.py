@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wq0ge(9+9!$+3kjca7-@@6+myafoz*&z504o=#=f)0d(nr=dui'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,6 +80,7 @@ TEMPLATES = [
     },
   },
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS = [
   # Tell Django where to look for React's static files (css, js)
@@ -107,7 +108,7 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
         	'read_default_file': '/etc/mysql/my.cnf',
-          'ssl': {'ca': 'backend/DigiCertGlobalRootCA.crt.pem'},
+          'ssl': {'ca': './DigiCertGlobalRootCA.crt.pem'},
     	},
     }
 }
