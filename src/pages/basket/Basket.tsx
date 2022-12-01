@@ -10,6 +10,7 @@ import { books } from "../shop/Shop";
 import BasketProductView from "./BasketProductView";
 import OrderService from "../../services/OrderService";
 import { CreateOrder } from "../../services/OrderService";
+import { setNotificationMessage, setNotificationType, setNotificationStatus } from "../../redux/slices/notificationSlice";
 
 export interface BasketProductWithDetails {
     product: Book,
@@ -68,12 +69,12 @@ const Basket = () => {
 
     const handleNavigateOrder = () => {
 
-        const createOrder: CreateOrder = {
+        const checkOrder: CreateOrder = {
             clientId: 1,
             basketItems: basketProducts.map((p: BasketProduct) => ({bookId: p.id, quantity: p.quantity}))
         }
 
-        OrderService.placeOrder(createOrder)
+        OrderService.checkOrder(checkOrder)
         .then(() => {
             navigate('/order')
         })
@@ -82,8 +83,6 @@ const Basket = () => {
             dispatch(setNotificationType("error"));
             dispatch(setNotificationStatus(true));
         })
-
-        navigate('/order')
     }
 
     return (
