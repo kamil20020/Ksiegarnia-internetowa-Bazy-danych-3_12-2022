@@ -12,7 +12,7 @@ import pl.edu.pwr.ksiegarniainternetowa.service.UserService;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8000", "https://booksshop-dr.azurewebsites.net"})
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/v1/user")
 @RequiredArgsConstructor
 public class UserController {
 

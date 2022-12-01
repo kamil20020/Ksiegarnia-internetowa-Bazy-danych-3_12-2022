@@ -2,6 +2,8 @@ package pl.edu.pwr.ksiegarniainternetowa.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.mapper.DateTimeMapper;
@@ -47,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderEntity> foundOrders = orderRepository.findAllByClientEntityId(clientId);
 
-       return foundOrders.stream().map(orderEntity -> {
+        return foundOrders.stream().map(orderEntity -> {
 
            OffsetDateTime offsetCreationDateTime = dateTimeMapper.localDateTimeToOffsetDateTime(
                orderEntity.getCreationDate()

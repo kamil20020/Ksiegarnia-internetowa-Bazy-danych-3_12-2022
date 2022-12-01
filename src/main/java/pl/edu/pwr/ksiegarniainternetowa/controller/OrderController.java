@@ -53,7 +53,7 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano id klienta");
         }
 
-        if(createOrderRequest.getBasketItems() == null){
+        if(createOrderRequest.getBasketItems() == null || createOrderRequest.getBasketItems().isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano produktów");
         }
 
