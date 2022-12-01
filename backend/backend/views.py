@@ -8,6 +8,11 @@ def return_page(request):
         return render(request, "index.html")
     return HttpResponse(status=403)
 
+def return_page2(request, resource):
+    if request.method == "GET":
+        return render(request, "index.html")
+    return HttpResponse(status=403)
+
 def get_start_page_data(request):
     if request.method == "GET":
         page =db.get_start_page_data()

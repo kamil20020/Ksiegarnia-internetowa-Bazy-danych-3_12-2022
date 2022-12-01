@@ -25,5 +25,5 @@ urlpatterns = [
   path('books/all', views.get_start_page_data),
   path('books/find/', views.find_books),
   path('book/<int:id>', views.get_book),
-  path('<string>', views.return_page)
+  path('<path:resource>', views.return_page2),
 ]
