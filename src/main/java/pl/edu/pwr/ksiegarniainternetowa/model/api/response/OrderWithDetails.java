@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.BookEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderItemEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderStatusEntity;
+import pl.edu.pwr.ksiegarniainternetowa.model.entity.PersonalDataEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -36,5 +37,6 @@ public class OrderWithDetails {
     private OffsetDateTime fullfillmentDate;
     private BigDecimal totalPrice;
     private OrderStatusEntity status;
+    private PersonalDataEntity receiverData;
     private List<OrderBookDetails> books;
 }

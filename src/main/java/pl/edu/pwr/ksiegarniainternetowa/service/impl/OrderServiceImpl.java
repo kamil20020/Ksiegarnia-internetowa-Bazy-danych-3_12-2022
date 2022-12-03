@@ -2,8 +2,6 @@ package pl.edu.pwr.ksiegarniainternetowa.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.mapper.DateTimeMapper;
@@ -18,10 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -63,6 +58,15 @@ public class OrderServiceImpl implements OrderService {
                );
            }
 
+           PersonalDataEntity receiverData;
+
+           if(orderEntity.getReceiverDataEntity() != null){
+               receiverData = orderEntity.getReceiverDataEntity().getPersonalDataEntity();
+           }
+           else{
+               receiverData = orderEntity.getClientEntity().getPersonalDataEntity();
+           }
+
            Map<Long, OrderWithDetails.OrderBookDetails> booksQuantities = new HashMap();
 
            BigDecimal totalPrice = BigDecimal.valueOf(0);
@@ -93,7 +97,8 @@ public class OrderServiceImpl implements OrderService {
                .fullfillmentDate(fullfillmentDate)
                .totalPrice(totalPrice)
                .status(orderEntity.getOrderStatusEntity())
-               .books(new ArrayList<OrderWithDetails.OrderBookDetails>(booksQuantities.values()))
+               .receiverData(receiverData)
+               .books(new ArrayList<>(booksQuantities.values()))
            .build();
        }).collect(Collectors.toList());
     }
@@ -206,5 +211,19 @@ public class OrderServiceImpl implements OrderService {
         });
 
         return orderRepository.save(placedOrder).getId();
+    }
+
+    @Transactional
+    @Override
+    public OrderStatusEntity changeOrderStatus(Long orderId, OrderStatusEntity orderStatusEntity)
+        throws EntityNotFoundException, IllegalStateException
+    {
+        Optional<OrderEntity> foundOrderEntityOpt = orderRepository.findById(orderId);
+
+        if(foundOrderEntityOpt.isEmpty()){
+            throw new EntityNotFoundException("Nie istnieje zamówienie o takim id");
+        }
+
+        return foundOrderEntityOpt.get().getOrderStatusEntity();
     }
 }

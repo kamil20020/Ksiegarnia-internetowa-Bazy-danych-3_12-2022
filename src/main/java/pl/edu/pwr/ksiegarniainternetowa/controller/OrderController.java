@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.CreateOrder;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.response.OrderWithDetails;
+import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderEntity;
+import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderStatusEntity;
 import pl.edu.pwr.ksiegarniainternetowa.service.OrderService;
+import pl.edu.pwr.ksiegarniainternetowa.service.OrderStatusService;
 
 import java.util.List;
 
@@ -18,6 +21,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderStatusService orderStatusService;
 
     @GetMapping("/orders/{clientId}")
     public ResponseEntity getOrdersByClientId(@PathVariable("clientId") String clientIdStr){
@@ -106,5 +110,57 @@ public class OrderController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(placedOrderId);
+    }
+
+    @PutMapping("/orders/{orderId}/rollback")
+    public ResponseEntity rollbackOrder(@PathVariable("orderId") String orderIdStr){
+
+        Long orderId;
+
+        try{
+            orderId = Long.valueOf(orderIdStr);
+        }
+        catch(NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Podano nieprawidłowe id zamówienia");
+        }
+
+        OrderStatusEntity newOrderStatus;
+
+        try{
+            newOrderStatus = orderService.changeOrderStatus(orderId, orderStatusService.getByName("Utworzone"));
+        }
+        catch(EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok(newOrderStatus);
+    }
+
+    @PutMapping("/orders/{orderId}")
+    public ResponseEntity updateOrderStatus(@PathVariable("orderId") String orderIdStr, OrderStatusEntity newOrderStatus){
+
+        if(newOrderStatus == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano statusu zamówienia");
+        }
+
+        Long orderId;
+
+        try{
+            orderId = Long.valueOf(orderIdStr);
+        }
+        catch(NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Podano nieprawidłowe id zamówienia");
+        }
+
+        OrderStatusEntity updatedOrderStatus;
+
+        try{
+            updatedOrderStatus = orderService.changeOrderStatus(orderId, newOrderStatus);
+        }
+        catch(EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok(updatedOrderStatus);
     }
 }
