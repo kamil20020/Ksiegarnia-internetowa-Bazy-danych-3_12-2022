@@ -22,8 +22,8 @@ export interface OrdersSearchCriteria{
     surname?: string,
     email?: string,
     tel?: string,
-    creationDateFrom?: Date,
-    creationDateTo?: Date,
+    creationDateFrom?: string,
+    creationDateTo?: string,
     statusId?: number,
     minPrice?: number,
     maxPrice?: number,
@@ -44,6 +44,10 @@ class OrderService {
 
     getById = (orderId: number) => {
         return axios.get(`${this.apiUrl}/order/${orderId}`)
+    }
+
+    getByClientId = (clientId: number) => {
+        return axios.get(`${this.apiUrl}/orders/${clientId}`)
     }
 
     searchByCriteria = (criteria: OrdersSearchCriteria) => {

@@ -1,4 +1,4 @@
-﻿import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Paper, Slider, TextField, Typography } from "@mui/material";
+﻿import { Box, Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, OutlinedInput, Pagination, Paper, Slider, TextField, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Book from "../../models/Book";
 import { book1 } from "../../assets/books";
@@ -9,6 +9,9 @@ import DatePickerForm from "../../components/common/DatePickerForm";
 import { privateDecrypt } from "crypto";
 import BookService from "../../services/BookService";
 import { BookSearchCriteria } from "../../services/BookService";
+import React from "react";
+import { Pagination as PaginationModel} from "../../models/Pagination";
+import { PageInfo } from "../../models/PageInfo";
 
 export const books: Book[] = [
     {
@@ -64,13 +67,28 @@ const Shop = () => {
 
     const [books, setBooks] = useState<BookHeader[]>([])
 
+    const [pagination, setPagination] = React.useState<PaginationModel>({
+        page: 0,
+        size: 8,
+    })
+    
+    const [pageInfo, setPageInfo] = React.useState<PageInfo>({
+        numberOfElements: 0,
+        totalPages: 0,
+        totalElements: 0,
+    })
+
     useEffect(() => {
         BookService.getAllAvailableBooks()
         .then((response) => {
-            const newBooks = response.data
-            setBooks(newBooks[0].books)
+            const newBooks = response.data[0].books.slice(pagination.page * pagination.size, (pagination.page+1) * pagination.size)
+            setBooks(newBooks)
+            setPageInfo({
+                ...pageInfo,
+                totalPages: Math.ceil(response.data[0].books.length / pagination.size)
+            })
 
-            const foundCategories = newBooks[1].categories.map((category: BookCategory, index: number) => ({
+            const foundCategories = response.data[1].categories.map((category: BookCategory, index: number) => ({
                 id: index,
                 name: category.name,
                 checked: false
@@ -97,7 +115,7 @@ const Shop = () => {
         setForm({...form, bookCategories: newBookCategories})
     }
 
-    const getBooksByCriterias = () => {
+    const getBooksByCriterias = (actualPage: number) => {
 
         const selectedBookCategories: string[] = form.bookCategories ? form.bookCategories
             .filter((category: BookCategorySelect) => category.checked)
@@ -138,7 +156,12 @@ const Shop = () => {
 
         BookService.getFoundBooks(criteria)
         .then((response) => {
-            setBooks(response.data)
+            const newBooks = response.data.slice(actualPage * pagination.size, (actualPage+1) * pagination.size)
+            setBooks(newBooks)
+            setPageInfo({
+                ...pageInfo,
+                totalPages: Math.ceil(response.data.length / pagination.size)
+            })
         })
         .catch((error) => {
             console.log(error)
@@ -168,7 +191,7 @@ const Shop = () => {
                             variant="contained"
                             color="secondary"
                             sx={{padding: '14px 0px'}}
-                            onClick={getBooksByCriterias}
+                            onClick={() => getBooksByCriterias(pagination.page)}
                         >
                             Szukaj
                         </Button>
@@ -252,6 +275,21 @@ const Shop = () => {
                     {!books ? null : books.map((b: BookHeader) => (
                         <BookHeaderView key={b.id} book={b}/>
                     ))}
+                </Grid>
+                <Grid item xs={12} container justifyContent="end" alignItems="center" marginBottom={8} marginTop={-3}>
+                    <Grid item xs={9} container justifyContent="center">
+                        <Pagination 
+                            variant="outlined"
+                            color="secondary"
+                            sx={{backgroundColor: 'white'}}
+                            shape="rounded"
+                            count={pageInfo.totalPages}
+                            onChange={(event: any, page: number) => {
+                                getBooksByCriterias(page-1)
+                                setPagination({...pagination, page: page-1})
+                            }}
+                        />
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>

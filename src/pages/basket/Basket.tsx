@@ -87,7 +87,7 @@ const Basket = () => {
 
     return (
         <Grid item xs={10} alignSelf="start" container justifyContent="space-between" marginTop={8}>
-            <Grid item xs={6} container direction="column">
+            <Grid item xs={6} container direction="column" zIndex={2}>
                 <Grid item marginBottom={6}>
                     <Typography variant="h4">
                         Koszyk ({basketProducts.length})
@@ -106,7 +106,7 @@ const Basket = () => {
                 </Grid>
             </Grid>
             <Grid item xs={5} container justifyContent="center" marginTop={14}>
-                <Grid item container direction="column" position="fixed" rowSpacing={4}>
+                <Grid item container direction="column" position="fixed" rowSpacing={4} zIndex={1}>
                     <Grid item container justifyContent="center">
                         <Typography variant="h4" textAlign="end">
                             Łączna kwota: {totalPrice == 0 ? 0 : totalPrice.toFixed(2)} zł

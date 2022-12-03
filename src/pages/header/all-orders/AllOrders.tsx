@@ -22,19 +22,20 @@ import FormValidator from "../../../services/FormValidator";
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Order from "../../../models/Order";
-import OrderService from "../../../services/OrderService"
+import OrderService, { OrdersSearchCriteria } from "../../../services/OrderService"
 import { Pagination } from "../../../models/Pagination";
 import OrderStatusSelect from "../../../components/common/OrderStatusSelect";
 import { OrderStatus } from "../../../models/OrderStatus";
 import { OrderWithDetails } from "../../../models/OrderWithDetails";
 import Page from "../../../models/Page";
 import moment from 'moment'
+import {PageInfo} from "../../../models/PageInfo";
   
 interface FormFields {
-  name: string;
-  surname: string;
-  email: string;
-  tel: string;
+  name?: string;
+  surname?: string;
+  email?: string;
+  tel?: string;
   creationDateFrom?: Date;
   creationDateTo?: Date;
   statusId?: number;
@@ -159,12 +160,7 @@ const SearchOrders = () => {
   
   const [orders, setOrders] = React.useState<OrderWithDetails[]>([])
 
-  const [form, setForm] = React.useState<FormFields>({
-    name: "",
-    surname: "",
-    email: "",
-    tel: "",
-  });
+  const [form, setForm] = React.useState<FormFields>({});
 
   const [errors, setErrors] = React.useState<{email: string}>({
     email: ""
@@ -172,7 +168,13 @@ const SearchOrders = () => {
 
   const [pagination, setPagination] = React.useState<Pagination>({
     page: 0,
-    size: 5
+    size: 5,
+  })
+
+  const [pageInfo, setPageInfo] = React.useState<PageInfo>({
+    numberOfElements: 0,
+    totalPages: 0,
+    totalElements: 0,
   })
 
   const navigate = useNavigate();
@@ -183,8 +185,8 @@ const SearchOrders = () => {
     let success = true;
 
     let newErrorsState = { ...errors };
-    if (FormValidator.checkIfIsRequired(form.email)) {
-      if (!FormValidator.checkEmail(form.email)) {
+    if (form.email && FormValidator.checkIfIsRequired(form.email)) {
+      if (!FormValidator.checkEmail(form.email as string)) {
           newErrorsState.email = FormValidator.emailMessage;
           success = false;
       }
@@ -195,13 +197,43 @@ const SearchOrders = () => {
     return success;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (actualPage: number) => {
     if (!validateForm()) return;
 
-    OrderService.searchOrders(form.statusId == 0 ? form : {}, pagination)
+    let creationDateFrom = null
+    let creationDateTo = null
+
+    if(form.creationDateFrom){
+      creationDateFrom = new Date(form.creationDateFrom as Date).setUTCHours(0)
+      creationDateFrom = new Date(creationDateFrom)
+      creationDateFrom = creationDateFrom.setUTCDate(creationDateFrom.getDate() + 1)
+      creationDateFrom = new Date(creationDateFrom)
+    }
+
+    if(form.creationDateTo){
+      creationDateTo = new Date(form.creationDateTo as Date).setUTCHours(23, 59, 59, 999)
+      creationDateTo = new Date(creationDateTo)
+      creationDateTo = creationDateTo.setUTCDate(creationDateTo.getDate())
+      creationDateTo = new Date(creationDateTo)
+    }
+
+    const searchCriteria: OrdersSearchCriteria = {
+      ...form,
+      creationDateFrom: creationDateFrom?.toISOString().replace('Z',''),
+      creationDateTo:  creationDateTo?.toISOString().replace('Z','')
+    }
+
+    console.log(searchCriteria)
+
+    OrderService.searchOrders(searchCriteria, {...pagination, page: actualPage})
     .then((response) => {
         const page: Page = response.data
         setOrders(page.content)
+        setPageInfo({
+          numberOfElements: page.numberOfElements,
+          totalPages: page.totalPages,
+          totalElements: page.totalElements
+        })
     })
     .catch((error) => {
         dispatch(setNotificationMessage(error.message.data));
@@ -223,20 +255,20 @@ const SearchOrders = () => {
             <FormElement
               fieldName="Imię"
               placeholder="Wpisz imię..."
-              value={form.name}
+              value={form.name ? form.name : ""}
               onChange={(event) => setForm({ ...form, name: event.target.value })}
             />
           </Grid>
           <FormElement
             fieldName="Nazwisko"
             placeholder="Wpisz nazwisko..."
-            value={form.surname}
+            value={form.surname ? form.surname : ""}
             onChange={(event) => setForm({ ...form, surname: event.target.value })}
           />
           <ValidatedForm
             fieldName="E-mail"
             placeholder="Wpisz e-mail..."
-            value={form.email}
+            value={form.email ? form.email : ""}
             error={errors.email}
             onChange={(value) => setForm({ ...form, email: value })}
             onErrorChange={(error) => setErrors({ ...errors, email: error })}
@@ -244,7 +276,7 @@ const SearchOrders = () => {
           <FormElement
             fieldName="Numer telefonu"
             placeholder="Wpisz numer telefonu..."
-            value={form.tel}
+            value={form.tel ? form.tel : ""}
             onChange={(event) => setForm({ ...form, tel: event.target.value })}
           />
         </Grid>
@@ -304,7 +336,7 @@ const SearchOrders = () => {
             fullWidth
             variant="contained"
             color="secondary"
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(pagination.page)}
           >
             Szukaj
           </Button>
@@ -314,12 +346,18 @@ const SearchOrders = () => {
         <Box sx={{ height: 400, width: '100%' }} justifyContent="center">
           <DataGrid
             rows={orders}
+            rowCount={pageInfo.totalElements}
+            pagination
             columns={columns}
             page={pagination.page}
             pageSize={pagination.size}
             rowsPerPageOptions={[5]}
             experimentalFeatures={{ newEditingApi: true }}
             onSelectionModelChange={(id) => navigate(`../order/${id}`)}
+            onPageChange={(page: number) => {
+              handleSubmit(page)
+              setPagination({...pagination, page: page})
+            }}
           />
         </Box>
       </Grid>
