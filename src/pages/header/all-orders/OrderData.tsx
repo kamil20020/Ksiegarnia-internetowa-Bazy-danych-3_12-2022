@@ -54,7 +54,7 @@ const OrderData = () => {
                     Zamówienie {order.id}
                 </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} marginBottom={5}>
                 {!showAllProducts ?
                     <OrderProduct book={order.books[0].book} quantity={order.books[0].quantity}/>
                 :
@@ -63,7 +63,7 @@ const OrderData = () => {
                     ))
                 }
                 {order.books.length > 1 && 
-                    <Button
+                    <Button 
                         variant="contained"
                         color="secondary"
                         onClick={() => setShowAllProducts(!showAllProducts)}
@@ -72,41 +72,43 @@ const OrderData = () => {
                     </Button>
                 }
             </Grid>
-            <Grid item xs={4} container direction="column" justifyContent="center" rowSpacing={2} marginBottom={10}>
-                <Typography variant="h4" textAlign="center" marginTop={5} marginBottom={2}>
-                    Dane zamówienia
-                </Typography>
-                <DataRow title="Data utworzenia:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>
-                {order.fulfillmentDate && <DataRow title="Data realizacji:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
-                <DataRow title="Łączna kwota:" value={`${order.totalPrice} zł`}/>
-                <Grid container>
-                    <Grid item xs={6}>
-                        <Typography variant="h4">
-                            Dane zamówienia
-                        </Typography>
+            <Grid item xs={6} container alignSelf="start" justifyContent="center">
+                <Grid item xs={12} container justifyContent="center" rowSpacing={2} marginBottom={10} >
+                    <Typography variant="h4" textAlign="center" marginTop={5} marginBottom={2}>
+                        Dane zamówienia
+                    </Typography>
+                    <DataRow title="Data utworzenia:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>
+                    {order.fulfillmentDate && <DataRow title="Data realizacji:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
+                    <DataRow title="Łączna kwota:" value={`${order.totalPrice} zł`}/>
+                    <Grid container>
+                        <Grid item xs={6}>
+                            <Typography variant="h4">
+                                Dane zamówienia
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <FormControl fullWidth>
+                                <Select
+                                    value={order.status.id.toString()}
+                                    label="Status"
+                                    onChange={handleUpdateOrder}
+                                >
+                                    {orderStatuses.map((status: OrderStatus) => (
+                                        <MenuItem key={status.id} value={status.id}>{status.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={6}>
-                        <FormControl fullWidth>
-                            <Select
-                                value={order.status.id.toString()}
-                                label="Status"
-                                onChange={handleUpdateOrder}
-                            >
-                                {orderStatuses.map((status: OrderStatus) => (
-                                    <MenuItem key={status.id} value={status.id}>{status.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                    <DataRow title="Status zamówienia:" value={order.status.name}/>
+                    <Typography variant="h4" textAlign="center" marginTop={5} marginBottom={2}>
+                        Dane odbiorcy
+                    </Typography>
+                    <DataRow title="Imię:" value={order.receiverData.name}/>
+                    <DataRow title="Nazwisko:" value={order.receiverData.surname}/>
+                    <DataRow title="E-mail:" value={order.receiverData.email}/>
+                    <DataRow title="Telefon:" value={order.receiverData.tel ? order.receiverData.tel : ''}/>
                 </Grid>
-                <DataRow title="Status zamówienia:" value={order.status.name}/>
-                <Typography variant="h4" textAlign="center" marginTop={5} marginBottom={2}>
-                    Dane odbiorcy
-                </Typography>
-                <DataRow title="Imię:" value={order.receiverData.name}/>
-                <DataRow title="Nazwisko:" value={order.receiverData.surname}/>
-                <DataRow title="E-mail:" value={order.receiverData.email}/>
-                <DataRow title="Telefon:" value={order.receiverData.tel ? order.receiverData.tel : ''}/>
             </Grid>
         </Grid>
     );

@@ -71,12 +71,10 @@ const BookDetails = () => {
     }
     
     const handleAddToBasket = () => {
-        if(!doBasketHave()){
-            dispatch(addProduct({id: book.id, price: book.price}))
-            dispatch(setNotificationMessage("Dodano produkt do koszyka"));
-            dispatch(setNotificationType("success"));
-            dispatch(setNotificationStatus(true));
-        }
+        dispatch(addProduct({id: book.id, price: book.price}))
+        dispatch(setNotificationMessage("Dodano produkt do koszyka"));
+        dispatch(setNotificationType("success"));
+        dispatch(setNotificationStatus(true));
     }
 
     return (
@@ -97,10 +95,10 @@ const BookDetails = () => {
                         <Button
                             fullWidth
                             variant="contained"
-                            color={!doBasketHave() ? "primary" : "info"}
+                            color={"primary"}
                             onClick={handleAddToBasket}
                         >
-                            {!doBasketHave() ? "Dodaj do koszyka" : "Dodany do koszyka"}
+                            Dodaj do koszyka
                         </Button>
                     </Grid>
                     <Grid item xs={6}>

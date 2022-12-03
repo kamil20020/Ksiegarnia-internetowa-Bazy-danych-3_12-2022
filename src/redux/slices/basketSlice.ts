@@ -39,6 +39,19 @@ export const basketSlice = createSlice({
                 state.products = [...state.products, {id: id, price: price, quantity: 1}]
                 state.totalPrice += price
             }
+            else{
+
+                let newProducts = [...state.products]
+                const index = state.products.map(p => p.id).indexOf(id)
+
+                let existingProduct = state.products[index]
+
+                existingProduct.quantity++
+                newProducts[index] = existingProduct
+
+                state.products = newProducts
+                state.totalPrice += +price
+            }
         },
         updateProductQuantity(state, action: PayloadAction<UpdateBasketProduct>){
             const data = action.payload

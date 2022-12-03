@@ -105,22 +105,24 @@ const Basket = () => {
                     ))}
                 </Grid>
             </Grid>
-            <Grid item xs={5} container direction="column" marginTop={14} rowSpacing={4}>
-                <Grid item container justifyContent="center">
-                    <Typography variant="h4" textAlign="end">
-                        Łączna kwota: {totalPrice == 0 ? 0 : totalPrice.toFixed(2)} zł
-                    </Typography>
-                </Grid>
-                <Grid item container justifyContent="center">
-                    {basketProducts.length > 0 &&
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleNavigateOrder}
-                        >
-                            Złóż zamówienie
-                        </Button>
-                    }
+            <Grid item xs={5} container justifyContent="center" marginTop={14}>
+                <Grid item container direction="column" position="fixed" rowSpacing={4}>
+                    <Grid item container justifyContent="center">
+                        <Typography variant="h4" textAlign="end">
+                            Łączna kwota: {totalPrice == 0 ? 0 : totalPrice.toFixed(2)} zł
+                        </Typography>
+                    </Grid>
+                    <Grid item container justifyContent="center">
+                        {basketProducts.length > 0 &&
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleNavigateOrder}
+                            >
+                                Złóż zamówienie
+                            </Button>
+                        }
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>
