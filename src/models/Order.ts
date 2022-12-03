@@ -3,7 +3,7 @@ import { OrderStatus } from "./OrderStatus";
 
 export default interface Order{
     id: number,
-    status: OrderStatus,
+    orderStatusEntity: OrderStatus,
     books: Book[],
     totalPrice: number,
     creationDate: Date,

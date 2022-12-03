@@ -1,6 +1,5 @@
 import { AppBar, createTheme, ThemeProvider } from "@mui/material";
 import React from "react";
-import { plPL } from "@mui/material/locale";
 import { Route, BrowserRouter, Routes, Outlet } from "react-router-dom";
 import Header from "./components/layout/header/Header";
 import Content from "./components/layout/content/Content";
@@ -12,10 +11,15 @@ import NotFound from "./pages/errors/NotFound";
 import './index.css';
 import BookDetails from "./pages/book-details/BookDetails";
 import Basket from "./pages/basket/Basket";
-import OrderView from "./pages/order/OrderView";
 import MyOrders from "./pages/header/my-orders/MyOrders";
+import OrderView from "./pages/placeOrder/OrderView";
+import SearchOrders from "./pages/header/all-orders/AllOrders";
+import OrderData from "./pages/header/all-orders/OrderData";
 import moment from 'moment'
 import 'moment/locale/pl'
+import { plPL as plPLLocale } from '@mui/material/locale';
+import { plPL as plPLGrid} from '@mui/x-data-grid';
+import { plPL as plPLDatePickers } from '@mui/x-date-pickers';
 
 moment.locale("pl")
 
@@ -49,7 +53,9 @@ const theme = createTheme(
       }
     },
   },
-  plPL
+  plPLLocale,
+  plPLGrid,
+  plPLDatePickers
 );
 
 function App() {
@@ -67,6 +73,8 @@ function App() {
               <Route path="/basket" element={<Basket/>} />
               <Route path="/order" element={<OrderView />} />
               <Route path="/my-orders" element={<MyOrders />} />
+              <Route path="/all-orders" element={<SearchOrders />} />
+              <Route path="/order/:orderId" element={<OrderData />} />
               <Route path="*" element={<NotFound /> } />
             </Routes>
           </Content>

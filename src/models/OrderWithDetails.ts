@@ -1,5 +1,6 @@
 ﻿import { OrderBookDetails } from "./OrderBookDetails";
 import { OrderStatus } from "./OrderStatus";
+import { PersonalData } from './PersonalData'
 
 export interface OrderWithDetails {
     id: number,
@@ -7,5 +8,6 @@ export interface OrderWithDetails {
     fulfillmentDate?: Date,
     totalPrice: number,
     status: OrderStatus,
-    books: OrderBookDetails[]
+    books: OrderBookDetails[],
+    receiverData: PersonalData
 }

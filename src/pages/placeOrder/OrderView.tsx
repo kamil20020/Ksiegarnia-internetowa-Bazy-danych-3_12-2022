@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ValidatedForm from "../../components/common/ValidatedForm";
 import Book from "../../models/Book";
+import { PersonalData } from "../../models/PersonalData";
 import { BasketProduct, clear } from "../../redux/slices/basketSlice";
 import { setNotificationMessage, setNotificationType, setNotificationStatus } from "../../redux/slices/notificationSlice";
 import { RootState } from "../../redux/store";
+import ClientService from "../../services/ClientService";
 import FormValidator from "../../services/FormValidator";
 import OrderService, { BasicBasketProduct, CreateOrder } from "../../services/OrderService";
 import { BasketProductWithDetails } from "../basket/Basket";
@@ -17,14 +19,7 @@ interface FormFields {
     name: string;
     surname: string;
     email: string;
-    telephone: string;
-}
-
-export const mockedData = {
-    name: "adam",
-    surname: "nowak",
-    email: "adam.nowak@mail.com",
-    telephone: "000111222"
+    tel: string;
 }
 
 const OrderView = () => {
@@ -32,12 +27,13 @@ const OrderView = () => {
     const basketProducts = useSelector((state: RootState) => state.basket).products
 
     const [totalPrice, setTotalPrice] = useState<number>(0);
+    const [personalData, setPersonalData] = useState<PersonalData | {}>({})
 
     const initialState: FormFields = {
         name: "",
         surname: "",
         email: "",
-        telephone: ""
+        tel: ""
     }
 
     const [form, setForm] = React.useState<FormFields>(initialState);
@@ -47,6 +43,13 @@ const OrderView = () => {
     const dispatch = useDispatch()
 
     const navigate = useNavigate()
+
+    useEffect(() => {
+        ClientService.getClientPersonalData(1)
+        .then((response) => {
+            setPersonalData(response.data)
+        })
+    }, [])
 
     useEffect(() => {
 
@@ -88,11 +91,11 @@ const OrderView = () => {
           newErrorsState.email = FormValidator.emailMessage;
           success = false;
         }
-        if (!FormValidator.checkIfIsRequired(form.telephone)) {
-          newErrorsState.telephone = FormValidator.requiredMessage;
+        if (!FormValidator.checkIfIsRequired(form.tel)) {
+          newErrorsState.tel = FormValidator.requiredMessage;
           success = false;
-        } else if (!FormValidator.checkMinLength(form.telephone, 3)) {
-          newErrorsState.telephone = FormValidator.minLengthMessage;
+        } else if (!FormValidator.checkMinLength(form.tel, 3)) {
+          newErrorsState.tel = FormValidator.minLengthMessage;
           success = false;
         }
     
@@ -104,9 +107,13 @@ const OrderView = () => {
       const handleSubmit = () => {
         if (!validateForm()) return;
 
-        const createOrder: CreateOrder = {
+        let createOrder: any = {
             clientId: 1,
             basketItems: basketProducts.map((p: BasketProduct) => ({bookId: p.id, quantity: p.quantity}))
+        }
+
+        if(JSON.stringify(form) !== JSON.stringify(personalData)){
+            createOrder.receiverData = personalData
         }
 
         OrderService.placeOrder(createOrder)
@@ -155,10 +162,10 @@ const OrderView = () => {
                 <ValidatedForm
                     fieldName="Numer telefonu"
                     placeholder="Wpisz nr telefonu..."
-                    value={form.telephone}
-                    error={errors.telephone}
-                    onChange={(value) => setForm({ ...form, telephone: value })}
-                    onErrorChange={(error) => setErrors({ ...errors, telephone: error })}
+                    value={form.tel}
+                    error={errors.tel}
+                    onChange={(value) => setForm({ ...form, tel: value })}
+                    onErrorChange={(error) => setErrors({ ...errors, tel: error })}
                 />
                 <Grid item xs={6} container marginTop={6} justifyContent="center">
                     <Button
@@ -167,7 +174,7 @@ const OrderView = () => {
                         color="secondary"
                         sx={{marginBottom: 4}}
                         onClick={() => {
-                            setForm(mockedData)
+                            setForm({...form, ...personalData})
                             setErrors(initialState)
                         }}
                     >

@@ -61,7 +61,17 @@ const Header = () => {
             </Grid>
           </React.Fragment>
         ) : (
-          <React.Fragment>
+          <React.Fragment>    
+            
+            <Grid item>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => navigate("/all-orders")}
+              >
+                Zarządzaj zamówieniami
+              </Button>
+            </Grid> 
             <Grid item>
               <Button
                 variant="contained"

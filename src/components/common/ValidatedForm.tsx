@@ -28,8 +28,8 @@ const ValidatedForm = (props: FormElementProps) => {
                     {props.fieldName}
                 </Typography>
             </Grid>
-            <Grid item xs={6} container justifyContent="end">
-                <FormControl>
+            <Grid item xs={6} container justifyContent="stretch">
+                <FormControl fullWidth>
                     <TextField
                         placeholder={props.placeholder}
                         color="secondary"

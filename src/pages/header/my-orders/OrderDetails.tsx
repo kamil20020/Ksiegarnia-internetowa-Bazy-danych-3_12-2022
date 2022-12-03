@@ -1,6 +1,7 @@
 ﻿import { Button, Grid, IconButton, Typography } from "@mui/material";
 import moment from "moment";
 import React from "react";
+import { useDispatch } from "react-redux";
 import CustomImage from "../../../components/common/CustomImage";
 import XCloeasableDialog from "../../../components/common/XCloeasableDialog";
 import Book from "../../../models/Book";
@@ -9,8 +10,9 @@ import { OrderBookDetails } from "../../../models/OrderBookDetails";
 import { OrderStatus } from "../../../models/OrderStatus";
 import { OrderWithDetails } from "../../../models/OrderWithDetails";
 import { removeProduct, updateProductQuantity } from "../../../redux/slices/basketSlice";
+import { setNotificationMessage, setNotificationType, setNotificationStatus } from "../../../redux/slices/notificationSlice";
+import OrderService from "../../../services/OrderService";
 import { DataRow } from "../../book-details/BookDetails";
-import { mockedData } from "../../order/OrderView";
 import OrderProduct from "./OrderProduct";
 
 export interface OrderDetailsProps {
@@ -20,11 +22,29 @@ export interface OrderDetailsProps {
 
 const OrderDetails = (props: OrderDetailsProps) => {
 
-    const order = props.orderWithDetails
+    const [order, setOrder] = React.useState<OrderWithDetails>(props.orderWithDetails)
 
     const [showAllProducts, setShowAllProducts] = React.useState<boolean>(false)
 
+    const dispatch = useDispatch()
+
     console.log(order)
+
+    const handleRollbackOrder = () => {
+
+        OrderService.rollbackOrder(order.id)
+        .then((response) => {
+            setOrder({...props.orderWithDetails, status: response.data})
+            dispatch(setNotificationMessage(`Wycofano zamówienie`));
+            dispatch(setNotificationType("success"));
+            dispatch(setNotificationStatus(true));
+        })
+        .catch((error) => {
+            dispatch(setNotificationMessage(error.message.data));
+            dispatch(setNotificationType("error"));
+            dispatch(setNotificationStatus(true));
+        })
+    }
 
     return (
         <Grid item container xs={10} justifyContent="space-between" marginBottom={4} rowSpacing={2}>
@@ -52,21 +72,22 @@ const OrderDetails = (props: OrderDetailsProps) => {
                 }
             </Grid>
             <Grid item xs={4} container direction="column" justifyContent="center" rowSpacing={2} marginBottom={10}>
-                <DataRow title="Data utworzena:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>
+                <DataRow title="Data utworzenia:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>
                 {order.fulfillmentDate && <DataRow title="Data realizacji:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
+                <DataRow title="Łączna kwota:" value={`${order.totalPrice} zł`}/>
                 <DataRow title="Status zamówienia:" value={order.status.name}/>
                 <Grid item container justifyContent="center" marginTop={2}>
                     <Grid item xs={6}>
                         <XCloeasableDialog
-                            title={`Dane odbiorcy zamówienia ${props.index+1}`}
+                            title={`Dane odbiorcy zamówienia nr ${props.index+1}`}
                             buttonTitle="Dane odbiorcy"
                             showButton={true}
                             form={
                                 <Grid item xs={8} container alignSelf="center" justifyContent="center" alignItems="center" rowSpacing={2}>
-                                    <DataRow title="Imię:" value={mockedData.name}/>
-                                    <DataRow title="Nazwisko:" value={mockedData.surname}/>
-                                    <DataRow title="E-mail:" value={mockedData.email}/>
-                                    <DataRow title="Telefon:" value={mockedData.telephone}/>
+                                    <DataRow title="Imię:" value={order.receiverData.name}/>
+                                    <DataRow title="Nazwisko:" value={order.receiverData.surname}/>
+                                    <DataRow title="E-mail:" value={order.receiverData.email}/>
+                                    <DataRow title="Telefon:" value={order.receiverData.tel ? order.receiverData.tel : ''}/>
                                 </Grid>
                             }
                         />
@@ -77,6 +98,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
                         <Button
                             variant="contained"
                             color="error"
+                            onClick={handleRollbackOrder}
                         >
                             Wycofaj
                         </Button>

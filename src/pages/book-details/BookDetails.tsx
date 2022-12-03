@@ -22,7 +22,7 @@ export const DataRow = (props: {title: string, value: string}) => {
                 <Typography variant="h6">{props.title}</Typography>
             </Grid>
             <Grid item xs={6} container justifyContent="end">
-                <Typography variant="h6">{props.value}</Typography>
+                <Typography variant="h6" textAlign="start">{props.value}</Typography>
             </Grid>
         </Grid>
     )
