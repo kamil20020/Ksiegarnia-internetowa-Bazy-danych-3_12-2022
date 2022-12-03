@@ -12,7 +12,8 @@ export interface DatePickerRangeFormProps {
     minDate?: Date,
     maxDate?: Date,
     error?: boolean,
-    onChange: (newDate: Date | null) => void
+    onChangeFrom: (newDate: Date | null) => void
+    onChangeTo: (newDate: Date | null) => void
 }
 
 const DatePickerFormRange = (props: DatePickerRangeFormProps) => {
@@ -35,7 +36,7 @@ const DatePickerFormRange = (props: DatePickerRangeFormProps) => {
                             value={props.valueFrom === undefined ? null : props.valueFrom}
                             minDate={props.minDate}
                             maxDate={props.maxDate}
-                            onChange={(newValue: Date | null) => props.onChange(newValue)}
+                            onChange={(newValue: Date | null) => props.onChangeFrom(newValue)}
                             renderInput={(params: any) => (
                                 <TextField 
                                     {...params}
@@ -51,7 +52,7 @@ const DatePickerFormRange = (props: DatePickerRangeFormProps) => {
                             value={props.valueTo === undefined ? null : props.valueTo}
                             minDate={props.minDate}
                             maxDate={props.maxDate}
-                            onChange={(newValue: Date | null) => props.onChange(newValue)}
+                            onChange={(newValue: Date | null) => props.onChangeTo(newValue)}
                             renderInput={(params: any) => (
                                 <TextField 
                                     {...params}

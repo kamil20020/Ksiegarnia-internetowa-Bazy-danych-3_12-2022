@@ -26,6 +26,9 @@ import OrderService from "../../../services/OrderService"
 import { Pagination } from "../../../models/Pagination";
 import OrderStatusSelect from "../../../components/common/OrderStatusSelect";
 import { OrderStatus } from "../../../models/OrderStatus";
+import { OrderWithDetails } from "../../../models/OrderWithDetails";
+import Page from "../../../models/Page";
+import moment from 'moment'
   
 interface FormFields {
   name: string;
@@ -34,61 +37,107 @@ interface FormFields {
   tel: string;
   creationDateFrom?: Date;
   creationDateTo?: Date;
-  status?: OrderStatus;
+  statusId?: number;
   minPrice?: number;
   maxPrice?: number;
 }
 
+/*
+    id: number,
+    creationDate: Date,
+    fulfillmentDate?: Date,
+    totalPrice: number,
+    status: OrderStatus,
+    books: OrderBookDetails[],
+    receiverData: PersonalData
+*/
+
 const columns: GridColDef[] = [
   { 
     field: 'id', 
-    headerName: 'Nr',
+    headerName: 'Id',
     flex: 1,
     align: 'center',
-    headerAlign: 'center'
+    headerAlign: 'center',
+    renderCell: (params: any) => {
+      return (<Typography>
+        {params.row.id}
+      </Typography>)
+    }
   },
   {
     field: 'name',
     headerName: 'Imię',
     flex: 2,
     align: 'center',
-    headerAlign: 'center'
+    headerAlign: 'center',
+    renderCell: (params: any) => {
+      return (<Typography>
+        {params.row.receiverData.name}
+      </Typography>)
+    }
   },
   {
     field: 'surname',
     headerName: 'Nazwisko',
     flex: 2,
     align: 'center',
-    headerAlign: 'center'
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <Typography>
+        {params.row.receiverData.surname}
+      </Typography>
+    )
   },
   {
     field: 'creationDate',
     headerName: 'Data utworzenia',
     flex: 2,
     align: 'center',
-    headerAlign: 'center'
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <Typography>
+        {moment(params.row.creationDate).format("DD.MM.YYYY").toLocaleString()}
+      </Typography>
+    )
   },
   {
     field: 'num_of_products',
     headerName: 'Liczba produktów',
     flex: 2,
     align: 'center',
-    headerAlign: 'center'
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <Typography>
+        {params.row.books.length}
+      </Typography>
+    )
   },
   {
     field: 'price',
     headerName: 'Cena',
     type: 'number',
-    flex: 1,
+    flex: 2,
     align: 'center',
-    headerAlign: 'center'
-  },  {
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <Typography>
+        {params.row.totalPrice} zł
+      </Typography>
+    )
+  },  
+  {
     field: 'status',
     headerName: 'Status',
     type: 'number',
-    flex: 3,
+    flex: 2,
     align: 'center',
-    headerAlign: 'center'
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <Typography>
+        {params.row.status.name}
+      </Typography>
+    )
   },
   {
     field: 'email',
@@ -96,14 +145,19 @@ const columns: GridColDef[] = [
     type: 'number',
     flex: 3,
     align: 'center',
-    headerAlign: 'center'
+    headerAlign: 'center',
+    renderCell: (params: any) => (
+      <Typography>
+        {params.row.receiverData.email}
+      </Typography>
+    )
   },
 
 ];
   //moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()
 const SearchOrders = () => {
   
-  const [orders, setOrders] = React.useState<Order[]>([])
+  const [orders, setOrders] = React.useState<OrderWithDetails[]>([])
 
   const [form, setForm] = React.useState<FormFields>({
     name: "",
@@ -130,7 +184,7 @@ const SearchOrders = () => {
 
     let newErrorsState = { ...errors };
     if (FormValidator.checkIfIsRequired(form.email)) {
-      if (!FormValidator.checkEmail(form.name)) {
+      if (!FormValidator.checkEmail(form.email)) {
           newErrorsState.email = FormValidator.emailMessage;
           success = false;
       }
@@ -144,9 +198,10 @@ const SearchOrders = () => {
   const handleSubmit = () => {
     if (!validateForm()) return;
 
-    OrderService.searchOrders(form, pagination)
+    OrderService.searchOrders(form.statusId == 0 ? form : {}, pagination)
     .then((response) => {
-        //
+        const page: Page = response.data
+        setOrders(page.content)
     })
     .catch((error) => {
         dispatch(setNotificationMessage(error.message.data));
@@ -162,21 +217,21 @@ const SearchOrders = () => {
           Wyszukiwanie zamówień
         </Typography>
       </Grid>
-      <Grid item xs={8} container marginTop={10} justifyContent="space-between">
+      <Grid item xs={9} container marginTop={10} justifyContent="space-between">
         <Grid item xs={5} container rowSpacing={2}>
           <Grid item xs={12} marginBottom={2}>
             <FormElement
               fieldName="Imię"
               placeholder="Wpisz imię..."
               value={form.name}
-              onChange={(value) => setForm({ ...form, name: value })}
+              onChange={(event) => setForm({ ...form, name: event.target.value })}
             />
           </Grid>
           <FormElement
             fieldName="Nazwisko"
             placeholder="Wpisz nazwisko..."
             value={form.surname}
-            onChange={(value) => setForm({ ...form, surname: value })}
+            onChange={(event) => setForm({ ...form, surname: event.target.value })}
           />
           <ValidatedForm
             fieldName="E-mail"
@@ -190,7 +245,7 @@ const SearchOrders = () => {
             fieldName="Numer telefonu"
             placeholder="Wpisz numer telefonu..."
             value={form.tel}
-            onChange={(value) => setForm({ ...form, tel: value })}
+            onChange={(event) => setForm({ ...form, tel: event.target.value })}
           />
         </Grid>
         <Grid item xs={5} container>
@@ -199,9 +254,10 @@ const SearchOrders = () => {
             maxDate={new Date()}
             valueFrom={form.creationDateFrom}
             valueTo={form.creationDateTo}
-            onChange={(newValue) => setForm({...form, creationDateTo: newValue != null ? newValue : undefined})}
+            onChangeFrom={(newValue) => setForm({...form, creationDateFrom: newValue != null ? newValue : undefined})}
+            onChangeTo={(newValue) => setForm({...form, creationDateTo: newValue != null ? newValue : undefined})}
           />
-          <OrderStatusSelect setStatus={(status: OrderStatus) => setForm({...form, status: status})}/>
+          <OrderStatusSelect setStatus={(status: OrderStatus) => setForm({...form, statusId: status.id})} canBeEmpty={true}/>
           <Grid item xs={12} container alignItems="center">
             <Grid item xs={6}>
                 <Typography
@@ -259,10 +315,11 @@ const SearchOrders = () => {
           <DataGrid
             rows={orders}
             columns={columns}
-            pageSize={5}
+            page={pagination.page}
+            pageSize={pagination.size}
             rowsPerPageOptions={[5]}
-            disableSelectionOnClick
             experimentalFeatures={{ newEditingApi: true }}
+            onSelectionModelChange={(id) => navigate(`../order/${id}`)}
           />
         </Box>
       </Grid>

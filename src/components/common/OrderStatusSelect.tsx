@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import OrderStatusService from "../../services/OrderStatusService";
 
 export interface OrderStatusSelectProps {
-    status?: OrderStatus, 
+    status?: OrderStatus,
+    canBeEmpty?: boolean,
     setStatus: (status: OrderStatus) => void
 }
 
@@ -40,6 +41,9 @@ const OrderStatusSelect = (props: OrderStatusSelectProps) => {
                         value={selectedStatus ? selectedStatus?.id.toString() : undefined}
                         onChange={handleUpdateStatus}
                     >
+                        {props.canBeEmpty &&
+                            <MenuItem key={0} value={0}>-</MenuItem>
+                        }
                         {orderStatuses.map((status: OrderStatus) => (
                             <MenuItem key={status.id} value={status.id.toString()}>{status.name}</MenuItem>
                         ))}

@@ -24,7 +24,7 @@ export interface OrdersSearchCriteria{
     tel?: string,
     creationDateFrom?: Date,
     creationDateTo?: Date,
-    status?: OrderStatus,
+    statusId?: number,
     minPrice?: number,
     maxPrice?: number,
 }
@@ -34,7 +34,7 @@ class OrderService {
     private apiUrl: string = `${process.env.REACT_APP_API_1 as string}/v1`
 
     searchOrders = (ordersCriteria: OrdersSearchCriteria, pagination: Pagination) => {
-        return axios.get(`${this.apiUrl}/orders`, {
+        return axios.get(`${this.apiUrl}/order`, {
             params: {
                 ...ordersCriteria,
                 ...pagination
@@ -46,8 +46,12 @@ class OrderService {
         return axios.get(`${this.apiUrl}/order/${orderId}`)
     }
 
-    getOrdersByClientId = (clientId: number) => {
-        return axios.get(`${this.apiUrl}/orders/${clientId}`)
+    searchByCriteria = (criteria: OrdersSearchCriteria) => {
+        return axios.get(`${this.apiUrl}/order`, {
+            params: {
+                ...criteria
+            }
+        })
     }
 
     checkOrder = (createOrder: CreateOrder) => {

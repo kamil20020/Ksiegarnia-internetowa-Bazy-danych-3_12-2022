@@ -12,7 +12,7 @@ const MyOrders = () => {
     const [orders, setOrders] = React.useState<OrderWithDetails[]>([])
 
     useEffect(() => {
-        OrderService.getOrdersByClientId(1)
+        OrderService.getById(1)
         .then((response) => {
             setOrders(response.data)
         })
