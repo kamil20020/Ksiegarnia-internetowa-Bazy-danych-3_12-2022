@@ -113,7 +113,7 @@ const OrderView = () => {
         }
 
         if(JSON.stringify(form) !== JSON.stringify(personalData)){
-            createOrder.receiverData = personalData
+            createOrder.receiverData = form
         }
 
         OrderService.placeOrder(createOrder)
