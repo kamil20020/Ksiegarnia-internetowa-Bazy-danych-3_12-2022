@@ -26,6 +26,6 @@ public class CreateOrder {
     }
 
     private Long clientId;
-    private PersonalDataEntity personalData;
+    private PersonalDataEntity receiverData;
     private List<BasketItem> basketItems;
 }

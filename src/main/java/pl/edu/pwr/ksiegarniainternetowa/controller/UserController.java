@@ -1,6 +1,8 @@
 package pl.edu.pwr.ksiegarniainternetowa.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.RegistrationData;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.ClientEntity;
@@ -43,5 +45,4 @@ public class UserController {
         clientService.save(clientEntity);
         return "Registration completed successfully";
     }
-
 }

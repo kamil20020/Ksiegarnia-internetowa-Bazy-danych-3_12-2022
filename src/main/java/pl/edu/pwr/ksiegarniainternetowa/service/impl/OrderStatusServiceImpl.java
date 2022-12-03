@@ -8,6 +8,7 @@ import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderStatusEntity;
 import pl.edu.pwr.ksiegarniainternetowa.repository.OrderStatusRepository;
 import pl.edu.pwr.ksiegarniainternetowa.service.OrderStatusService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -33,5 +34,11 @@ public class OrderStatusServiceImpl implements OrderStatusService {
         }
         
         return foundOrderStatus.get();
+    }
+
+    @Override
+    public List<OrderStatusEntity> getAll(){
+
+        return orderStatusRepository.findAll();
     }
 }

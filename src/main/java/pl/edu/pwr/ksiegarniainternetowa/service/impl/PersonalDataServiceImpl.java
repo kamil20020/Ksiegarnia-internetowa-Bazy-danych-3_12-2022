@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PersonalDataServiceImpl implements PersonalDataService {
 
-    private PersonalDataRepository personalDataRepository;
+    private final PersonalDataRepository personalDataRepository;
 
     @Override
     public PersonalDataEntity getById(Long id) throws EntityNotFoundException {

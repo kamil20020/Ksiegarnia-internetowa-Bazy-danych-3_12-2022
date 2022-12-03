@@ -1,11 +1,15 @@
 package pl.edu.pwr.ksiegarniainternetowa.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.criterion.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.CreateOrder;
+import pl.edu.pwr.ksiegarniainternetowa.model.api.request.OrderSearchCriteria;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.response.OrderWithDetails;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.OrderStatusEntity;
@@ -22,6 +26,30 @@ public class OrderController {
 
     private final OrderService orderService;
     private final OrderStatusService orderStatusService;
+
+    @GetMapping(value = "/order/{orderId}")
+    public ResponseEntity getById(@PathVariable("orderId") String orderIdStr){
+
+        Long orderId;
+
+        try{
+            orderId = Long.valueOf(orderIdStr);
+        }
+        catch(NumberFormatException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Podano niewłaściwe id zamówienia");
+        }
+
+        OrderWithDetails foundOrder;
+
+        try{
+            foundOrder = orderService.getById(orderId);
+        }
+        catch(EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok(foundOrder);
+    }
 
     @GetMapping("/orders/{clientId}")
     public ResponseEntity getOrdersByClientId(@PathVariable("clientId") String clientIdStr){
@@ -47,6 +75,15 @@ public class OrderController {
         return ResponseEntity.ok(foundOrders);
     }
 
+    @GetMapping("/order")
+    public ResponseEntity<Page<OrderWithDetails>> searchByCriteria(
+        OrderSearchCriteria orderSearchCriteria, Pageable pageable
+    ){
+        Page<OrderWithDetails> foundOrdersPage = orderService.searchOrdersByCriteria(orderSearchCriteria, pageable);
+
+        return ResponseEntity.ok(foundOrdersPage);
+    }
+
     @PostMapping("/order/check")
     public ResponseEntity checkOrder(@RequestBody CreateOrder createOrderRequest){
         if(createOrderRequest == null){
@@ -64,7 +101,7 @@ public class OrderController {
         try{
             orderService.checkOrder(
                 createOrderRequest.getClientId(),
-                createOrderRequest.getPersonalData(),
+                createOrderRequest.getReceiverData(),
                 createOrderRequest.getBasketItems()
             );
         }
@@ -98,7 +135,7 @@ public class OrderController {
         try{
             placedOrderId = orderService.placeOrder(
                 createOrderRequest.getClientId(),
-                createOrderRequest.getPersonalData(),
+                createOrderRequest.getReceiverData(),
                 createOrderRequest.getBasketItems()
             );
         }
@@ -112,7 +149,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(placedOrderId);
     }
 
-    @PutMapping("/orders/{orderId}/rollback")
+    @PutMapping("/order/{orderId}/rollback")
     public ResponseEntity rollbackOrder(@PathVariable("orderId") String orderIdStr){
 
         Long orderId;
@@ -127,7 +164,8 @@ public class OrderController {
         OrderStatusEntity newOrderStatus;
 
         try{
-            newOrderStatus = orderService.changeOrderStatus(orderId, orderStatusService.getByName("Utworzone"));
+            newOrderStatus = orderService.changeOrderStatus(orderId, orderStatusService.getByName("Wycofane"))
+                .getOrderStatusEntity();
         }
         catch(EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -136,7 +174,7 @@ public class OrderController {
         return ResponseEntity.ok(newOrderStatus);
     }
 
-    @PutMapping("/orders/{orderId}")
+    @PutMapping("/order/{orderId}")
     public ResponseEntity updateOrderStatus(@PathVariable("orderId") String orderIdStr, OrderStatusEntity newOrderStatus){
 
         if(newOrderStatus == null){
@@ -152,15 +190,15 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Podano nieprawidłowe id zamówienia");
         }
 
-        OrderStatusEntity updatedOrderStatus;
+        OrderEntity updatedOrder;
 
         try{
-            updatedOrderStatus = orderService.changeOrderStatus(orderId, newOrderStatus);
+            updatedOrder = orderService.changeOrderStatus(orderId, newOrderStatus);
         }
         catch(EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
-        return ResponseEntity.ok(updatedOrderStatus);
+        return ResponseEntity.ok(updatedOrder);
     }
 }
