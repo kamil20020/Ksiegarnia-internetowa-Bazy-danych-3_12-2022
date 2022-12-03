@@ -35,7 +35,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
             </Grid>
             <Grid item xs={6}>
                 {!showAllProducts ?
-                    <OrderProduct book={order.books[0].book} quantity={5}/>
+                    <OrderProduct book={order.books[0].book} quantity={order.books[0].quantity}/>
                 :
                     order.books.map((bookDetails: OrderBookDetails) => (
                         <OrderProduct key={bookDetails.book.id} book={bookDetails.book} quantity={bookDetails.quantity}/>
