@@ -24,7 +24,7 @@ export interface OrdersSearchCriteria{
     tel?: string,
     creationDateFrom?: Date,
     creationDateTo?: Date,
-    status?: string,
+    status?: OrderStatus,
     minPrice?: number,
     maxPrice?: number,
 }
@@ -60,6 +60,10 @@ class OrderService {
 
     rollbackOrder = (orderId: number) => {
         return axios.put(`${this.apiUrl}/order/${orderId}/rollback`)
+    }
+
+    updateOrder = (orderId: number, status: OrderStatus) => {
+        return axios.put(`${this.apiUrl}/order/${orderId}`, {newOrderStatus: status})
     }
 }
 

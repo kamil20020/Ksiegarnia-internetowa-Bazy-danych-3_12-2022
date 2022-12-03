@@ -5,6 +5,7 @@ import {
     FormHelperText,
     FormLabel,
     Grid,
+    OutlinedInput,
     TextField,
     Typography,
   } from "@mui/material";
@@ -23,6 +24,8 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import Order from "../../../models/Order";
 import OrderService from "../../../services/OrderService"
 import { Pagination } from "../../../models/Pagination";
+import OrderStatusSelect from "../../../components/common/OrderStatusSelect";
+import { OrderStatus } from "../../../models/OrderStatus";
   
 interface FormFields {
   name: string;
@@ -31,7 +34,7 @@ interface FormFields {
   tel: string;
   creationDateFrom?: Date;
   creationDateTo?: Date;
-  status: string;
+  status?: OrderStatus;
   minPrice?: number;
   maxPrice?: number;
 }
@@ -107,7 +110,6 @@ const SearchOrders = () => {
     surname: "",
     email: "",
     tel: "",
-    status: "",
   });
 
   const [errors, setErrors] = React.useState<{email: string}>({
@@ -154,7 +156,7 @@ const SearchOrders = () => {
 }
 
   return (
-    <Grid item container justifyContent="center" alignSelf="start" marginTop={6}>
+    <Grid item container justifyContent="center" alignSelf="start" marginTop={6} marginBottom={6}>
       <Grid item xs={12}>
         <Typography variant="h4" textAlign="center">
           Wyszukiwanie zamówień
@@ -191,7 +193,7 @@ const SearchOrders = () => {
             onChange={(value) => setForm({ ...form, tel: value })}
           />
         </Grid>
-        <Grid item xs={5} container rowSpacing={2}>
+        <Grid item xs={5} container>
           <DatePickerFormRange
             fieldName="Data utworzenia"
             maxDate={new Date()}
@@ -199,24 +201,39 @@ const SearchOrders = () => {
             valueTo={form.creationDateTo}
             onChange={(newValue) => setForm({...form, creationDateTo: newValue != null ? newValue : undefined})}
           />
-          <FormElement
-            fieldName="Nazwisko"
-            placeholder="Wpisz nazwisko..."
-            value={form.surname}
-            onChange={(value) => setForm({ ...form, surname: value })}
-          />
-          <FormElement
-            fieldName="Numer telefonu"
-            placeholder="Wpisz numer telefonu..."
-            value={form.tel}
-            onChange={(value) => setForm({ ...form, tel: value })}
-          />
-          <FormElement
-            fieldName="Numer telefonu"
-            placeholder="Wpisz numer telefonu..."
-            value={form.tel}
-            onChange={(value) => setForm({ ...form, tel: value })}
-          />
+          <OrderStatusSelect setStatus={(status: OrderStatus) => setForm({...form, status: status})}/>
+          <Grid item xs={12} container alignItems="center">
+            <Grid item xs={6}>
+                <Typography
+                    textAlign="start" 
+                    variant="h6"
+                >
+                    Łączna kwota
+                </Typography>
+            </Grid>
+            <Grid item xs={6} container justifyContent="space-between">
+              <Grid item xs={5.5}>
+                  <TextField
+                      fullWidth
+                      color="secondary"
+                      placeholder="Od"
+                      value={form.minPrice}
+                      InputProps={{ inputProps: { min: 0, max: form.maxPrice } }}
+                      onChange={(event: any) => setForm({...form, minPrice: event.target.value})}
+                  />
+              </Grid>
+              <Grid item xs={5.5}>
+                <TextField
+                    fullWidth
+                    color="secondary"
+                    placeholder="Do"
+                    value={form.maxPrice}
+                    InputProps={{ inputProps: { min: form.minPrice, max: 1000 } }}
+                    onChange={(event: any) => setForm({...form, maxPrice: event.target.value})}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       <Grid
@@ -237,7 +254,7 @@ const SearchOrders = () => {
           </Button>
         </Grid>
       </Grid>
-      <Grid item xs={10} marginTop={4}>
+      <Grid item xs={10} marginTop={4} marginBottom={8}>
         <Box sx={{ height: 400, width: '100%' }} justifyContent="center">
           <DataGrid
             rows={orders}

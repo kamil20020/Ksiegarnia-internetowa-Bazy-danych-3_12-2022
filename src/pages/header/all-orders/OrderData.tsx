@@ -12,6 +12,7 @@ import { DataRow } from "../../book-details/BookDetails"
 import OrderProduct from "../my-orders/OrderProduct"
 import { OrderStatus } from "../../../models/OrderStatus"
 import { SelectChangeEvent } from "@mui/material"
+import OrderStatusSelect from "../../../components/common/OrderStatusSelect"
 
 const OrderData = () => {
 
@@ -39,12 +40,11 @@ const OrderData = () => {
         return <div>Ładowanie...</div>
     }
 
-    const handleUpdateOrder = (event: SelectChangeEvent) => {
-        const orderStatusId: number = +event.target.value
-        setOrder({
-            ...order, 
-            status:  orderStatuses.filter((status: OrderStatus) => status.id == orderStatusId)[0]
-        });
+    const handleUpdateOrder = (status: OrderStatus) => {
+        OrderService.updateOrder(orderId, status)
+        .then((response) => {
+            setOrder({...order, status: response.data.status})
+        })
     }
 
     return (
@@ -54,7 +54,7 @@ const OrderData = () => {
                     Zamówienie {order.id}
                 </Typography>
             </Grid>
-            <Grid item xs={6} marginBottom={5}>
+            <Grid item xs={5.4} marginBottom={5}>
                 {!showAllProducts ?
                     <OrderProduct book={order.books[0].book} quantity={order.books[0].quantity}/>
                 :
@@ -72,35 +72,18 @@ const OrderData = () => {
                     </Button>
                 }
             </Grid>
-            <Grid item xs={6} container alignSelf="start" justifyContent="center">
-                <Grid item xs={12} container justifyContent="center" rowSpacing={2} marginBottom={10} >
-                    <Typography variant="h4" textAlign="center" marginTop={5} marginBottom={2}>
+            <Grid item xs={5.4} container alignSelf="start" justifyContent="center">
+                <Grid item xs={4} container justifyContent="center" rowSpacing={2} marginBottom={10} position="fixed">
+                    <Typography variant="h4" textAlign="center" marginBottom={2}>
                         Dane zamówienia
                     </Typography>
                     <DataRow title="Data utworzenia:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>
                     {order.fulfillmentDate && <DataRow title="Data realizacji:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
                     <DataRow title="Łączna kwota:" value={`${order.totalPrice} zł`}/>
-                    <Grid container>
-                        <Grid item xs={6}>
-                            <Typography variant="h4">
-                                Dane zamówienia
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <FormControl fullWidth>
-                                <Select
-                                    value={order.status.id.toString()}
-                                    label="Status"
-                                    onChange={handleUpdateOrder}
-                                >
-                                    {orderStatuses.map((status: OrderStatus) => (
-                                        <MenuItem key={status.id} value={status.id}>{status.name}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                    <DataRow title="Status zamówienia:" value={order.status.name}/>
+                    <OrderStatusSelect 
+                        status={order.status} 
+                        setStatus={handleUpdateOrder}
+                    />
                     <Typography variant="h4" textAlign="center" marginTop={5} marginBottom={2}>
                         Dane odbiorcy
                     </Typography>
