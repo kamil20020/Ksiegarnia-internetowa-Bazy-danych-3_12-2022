@@ -5,9 +5,16 @@ import basket from "../../../assets/basket.png";
 import "./Header.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { logout } from "../../../redux/slices/userSlice";
+import { setNotificationMessage, setNotificationType, setNotificationStatus } from "../../../redux/slices/notificationSlice";
 
 const Header = () => {
-  const [isUserLogged, setIsUserLogged] = useState<boolean>(false);
+
+  const userDetails = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch()
+
   const navigate = useNavigate();
 
   return (
@@ -38,23 +45,38 @@ const Header = () => {
         justifyContent="end"
         columnSpacing={3}
       >
-        <Button variant="contained" color="secondary"
-          onClick={() => navigate('/my-orders')}
-        >
-          Moje zamówienia
-        </Button>
-        {isUserLogged ? (
+        {userDetails.isLogged ? (
           <React.Fragment>
-            <Grid item>
-              <Button variant="contained" color="secondary">
-                Moje zamówienia
-              </Button>
-            </Grid>
+            {userDetails.clientId ?
+              <Grid item>
+                <Button variant="contained" color="secondary"
+                  onClick={() => navigate('/my-orders')}
+                >
+                  Moje zamówienia
+                </Button>
+              </Grid>
+              :
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => navigate("/all-orders")}
+                >
+                  Zarządzaj zamówieniami
+                </Button>
+              </Grid>
+            }
             <Grid item>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => setIsUserLogged(false)}
+                onClick={() => {
+                  dispatch(logout())
+                  dispatch(setNotificationMessage("Wylogowano pomyślnie"));
+                  dispatch(setNotificationType("success"));
+                  dispatch(setNotificationStatus(true));
+                  navigate('/')
+                }}
               >
                 Wyloguj się
               </Button>
@@ -62,16 +84,6 @@ const Header = () => {
           </React.Fragment>
         ) : (
           <React.Fragment>    
-            
-            <Grid item>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => navigate("/all-orders")}
-              >
-                Zarządzaj zamówieniami
-              </Button>
-            </Grid> 
             <Grid item>
               <Button
                 variant="contained"
@@ -92,11 +104,13 @@ const Header = () => {
             </Grid>
           </React.Fragment>
         )}
-        <Grid item>
-          <Link to="/basket" className="nice-link">
-            <img src={basket} width="60" alt="koszyk"/>
-          </Link>
-        </Grid>
+        {userDetails.clientId &&
+          <Grid item>
+            <Link to="/basket" className="nice-link">
+              <img src={basket} width="60" alt="koszyk"/>
+            </Link>
+          </Grid>
+        }
       </Grid>
     </Grid>
   );

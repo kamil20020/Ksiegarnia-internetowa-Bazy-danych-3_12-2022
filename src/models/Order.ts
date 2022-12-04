@@ -7,5 +7,5 @@ export default interface Order{
     books: Book[],
     totalPrice: number,
     creationDate: Date,
-    fulfillmentDate?: Date
+    fullfillmentDate?: Date
 }

@@ -18,7 +18,6 @@ const OrderData = () => {
 
     let orderId: any = useParams().orderId
     const [order, setOrder] = useState<OrderWithDetails>()
-    const [orderStatuses, setOrderStatuses] = useState<OrderStatus[]>([])
 
     const [showAllProducts, setShowAllProducts] = React.useState<boolean>(false)
 
@@ -43,7 +42,7 @@ const OrderData = () => {
     const handleUpdateOrder = (status: OrderStatus) => {
         OrderService.updateOrder(orderId, status)
         .then((response) => {
-            setOrder({...order, status: response.data.status})
+            setOrder({...order, status: response.data.status, fullfillmentDate: response.data.fullfillmentDate})
         })
     }
 
@@ -78,7 +77,7 @@ const OrderData = () => {
                         Dane zamówienia
                     </Typography>
                     <DataRow title="Data utworzenia:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>
-                    {order.fulfillmentDate && <DataRow title="Data realizacji:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
+                    {order.fullfillmentDate && <DataRow title="Data odbioru:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
                     <DataRow title="Łączna kwota:" value={`${order.totalPrice} zł`}/>
                     <OrderStatusSelect 
                         status={order.status} 

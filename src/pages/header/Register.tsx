@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import useEffect from "react";
+import {useEffect} from "react";
 import BottomNavigation from "../../components/common/BottomNavigation";
 import ValidatedForm from "../../components/common/ValidatedForm";
 import {
@@ -18,8 +18,11 @@ import {
   setNotificationStatus,
 } from "../../redux/slices/notificationSlice";
 import FormValidator from "../../services/FormValidator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import UserService, { Credentials } from "../../services/UserService";
+import { PersonalData } from "../../models/PersonalData";
+import { RootState } from "../../redux/store";
 
 interface FormFields {
   name: string;
@@ -28,25 +31,12 @@ interface FormFields {
   passwordRepeat: string;
   surname: string;
   email: string;
-  telephone: string;
+  tel: string;
 }
 
 const Register = () => {
 
-  // useEffect(() => {
-
-
-
-
-
-
-
-
-  // },[]);
-
-
-
-
+  const useDetails = useSelector((state: RootState) => state.user)
 
   const [form, setForm] = React.useState<FormFields>({
     name: "",
@@ -55,13 +45,19 @@ const Register = () => {
     passwordRepeat: "",
     surname: "",
     email: "",
-    telephone: "",
+    tel: "",
   });
 
   const [errors, setErrors] = React.useState<FormFields>(form);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(useDetails.isLogged){
+      navigate('../')
+    }
+  }, [useDetails.isLogged])
 
   const validateForm = () => {
     let success = true;
@@ -123,11 +119,11 @@ const Register = () => {
       newErrorsState.email = FormValidator.emailMessage;
       success = false;
     }
-    if (!FormValidator.checkIfIsRequired(form.telephone)) {
-      newErrorsState.telephone = FormValidator.requiredMessage;
+    if (!FormValidator.checkIfIsRequired(form.tel)) {
+      newErrorsState.tel = FormValidator.requiredMessage;
       success = false;
-    } else if (!FormValidator.checkMinLength(form.telephone, 3)) {
-      newErrorsState.telephone = FormValidator.minLengthMessage;
+    } else if (!FormValidator.checkMinLength(form.tel, 3)) {
+      newErrorsState.tel = FormValidator.minLengthMessage;
       success = false;
     }
 
@@ -139,9 +135,29 @@ const Register = () => {
   const handleSubmit = () => {
     if (!validateForm()) return;
 
-    dispatch(setNotificationMessage("Zarejestrowano pomyślnie"));
-    dispatch(setNotificationType("success"));
-    dispatch(setNotificationStatus(true));
+    const credentials: Credentials = {
+      username: form.username,
+      password: form.password
+    }
+
+    const personalData: PersonalData = {
+      name: form.name,
+      surname: form.surname,
+      email: form.email,
+      tel: form.tel
+    }
+
+    UserService.register(credentials, personalData)
+    .then((response) => {
+      dispatch(setNotificationMessage("Zarejestrowano pomyślnie"));
+      dispatch(setNotificationType("success"));
+      dispatch(setNotificationStatus(true));
+    })
+    .catch((error) => {
+      dispatch(setNotificationMessage(error.response.data));
+      dispatch(setNotificationType("error"));
+      dispatch(setNotificationStatus(true));
+    })
   };
 
   return (
@@ -210,10 +226,10 @@ const Register = () => {
           <ValidatedForm
             fieldName="Numer telefonu"
             placeholder="Wpisz nr telefonu..."
-            value={form.telephone}
-            error={errors.telephone}
-            onChange={(value) => setForm({ ...form, telephone: value })}
-            onErrorChange={(error) => setErrors({ ...errors, telephone: error })}
+            value={form.tel}
+            error={errors.tel}
+            onChange={(value) => setForm({ ...form, tel: value })}
+            onErrorChange={(error) => setErrors({ ...errors, tel: error })}
           />
         </Grid>
       </Grid>

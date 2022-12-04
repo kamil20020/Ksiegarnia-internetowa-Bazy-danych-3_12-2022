@@ -8,8 +8,7 @@
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
-import useEffect from "react";
+import React, { useEffect } from "react";
 import BottomNavigation from "../../components/common/BottomNavigation";
 import ValidatedForm from "../../components/common/ValidatedForm";
 import {
@@ -18,28 +17,27 @@ import {
   setNotificationStatus,
 } from "../../redux/slices/notificationSlice";
 import FormValidator from "../../services/FormValidator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import UserService from "../../services/UserService";
+import axios from "axios";
+import { login } from "../../redux/slices/userSlice";
+import { RootState } from "../../redux/store";
 
 interface FormFields {
   username: string;
   password: string;
 }
 
+interface LoggedUserDetails {
+  accessToken: string,
+  userId: number,
+  clientId?: number
+}
+
 const Login = () => {
 
-    // useEffect(() => {
-
-
-
-
-
-
-
-
-  // },[]);
-
-
+  const useDetails = useSelector((state: RootState) => state.user)
 
   const [form, setForm] = React.useState<FormFields>({
     username: "",
@@ -51,6 +49,12 @@ const Login = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(useDetails.isLogged){
+      navigate('../')
+    }
+  }, [useDetails.isLogged])
 
   const validateForm = () => {
     let success = true;
@@ -85,11 +89,25 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
-    if (!validateForm()) return;
+    //if (!validateForm()) return;
 
-    dispatch(setNotificationMessage("Zalogowano pomyślnie"));
-    dispatch(setNotificationType("success"));
-    dispatch(setNotificationStatus(true));
+    UserService.login(form)
+    .then((response) => {
+      const loggedUserDetails: LoggedUserDetails = response.data
+      axios.defaults.headers.common['Authorization'] = `Bearer ${loggedUserDetails.accessToken}`
+      dispatch(login({
+        userId: loggedUserDetails.userId, clientId: loggedUserDetails.clientId
+      }))
+      dispatch(setNotificationMessage("Zalogowano pomyślnie"));
+      dispatch(setNotificationType("success"));
+      dispatch(setNotificationStatus(true));
+      navigate('/')
+    })
+    .catch((error) => {
+      dispatch(setNotificationMessage("Login lub hasło są niepoprawne"));
+      dispatch(setNotificationType("error"));
+      dispatch(setNotificationStatus(true));
+    })
   };
 
   return (

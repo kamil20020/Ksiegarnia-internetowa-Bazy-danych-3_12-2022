@@ -5,7 +5,7 @@ import { PersonalData } from './PersonalData'
 export interface OrderWithDetails {
     id: number,
     creationDate: Date,
-    fulfillmentDate?: Date,
+    fullfillmentDate?: Date,
     totalPrice: number,
     status: OrderStatus,
     books: OrderBookDetails[],

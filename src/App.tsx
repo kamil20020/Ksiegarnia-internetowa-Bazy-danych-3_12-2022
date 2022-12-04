@@ -1,4 +1,4 @@
-import { AppBar, createTheme, ThemeProvider } from "@mui/material";
+import { AppBar, Button, createTheme, ThemeProvider } from "@mui/material";
 import React from "react";
 import { Route, BrowserRouter, Routes, Outlet } from "react-router-dom";
 import Header from "./components/layout/header/Header";
@@ -20,6 +20,7 @@ import 'moment/locale/pl'
 import { plPL as plPLLocale } from '@mui/material/locale';
 import { plPL as plPLGrid} from '@mui/x-data-grid';
 import { plPL as plPLDatePickers } from '@mui/x-date-pickers';
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 moment.locale("pl")
 
@@ -69,12 +70,36 @@ function App() {
               <Route path="/" element={<Shop />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/book-details/:bookId" element={<BookDetails />} />
-              <Route path="/basket" element={<Basket/>} />
-              <Route path="/order" element={<OrderView />} />
-              <Route path="/my-orders" element={<MyOrders />} />
-              <Route path="/all-orders" element={<SearchOrders />} />
-              <Route path="/order/:orderId" element={<OrderData />} />
+              <Route path="/book-details/:bookId" element={
+                <ProtectedRoute isEmployee={false}>
+                  <BookDetails />
+                </ProtectedRoute>
+              } />
+              <Route path="/basket" element={
+                <ProtectedRoute isEmployee={false}>
+                  <Basket/>
+                </ProtectedRoute>
+              } />
+              <Route path="/order" element={
+                <ProtectedRoute isEmployee={false}>
+                  <OrderView />
+                </ProtectedRoute>
+              } />
+              <Route path="/my-orders" element={
+                <ProtectedRoute isEmployee={false}>
+                  <MyOrders />
+                </ProtectedRoute>
+              } />
+              <Route path="/all-orders" element={
+                <ProtectedRoute isEmployee={true}>
+                  <SearchOrders />
+                </ProtectedRoute>
+              } />
+              <Route path="/order/:orderId" element={
+                <ProtectedRoute isEmployee={true}>
+                  <OrderData />
+                </ProtectedRoute>
+              } />
               <Route path="*" element={<NotFound /> } />
             </Routes>
           </Content>

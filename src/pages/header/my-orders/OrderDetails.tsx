@@ -73,7 +73,7 @@ const OrderDetails = (props: OrderDetailsProps) => {
             </Grid>
             <Grid item xs={4} container direction="column" justifyContent="center" rowSpacing={2} marginBottom={10}>
                 <DataRow title="Data utworzenia:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>
-                {order.fulfillmentDate && <DataRow title="Data realizacji:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
+                {order.fullfillmentDate && <DataRow title="Data odbioru:" value={moment(order.creationDate).format("DD.MM.YYYY").toLocaleString()}/>}
                 <DataRow title="Łączna kwota:" value={`${order.totalPrice} zł`}/>
                 <DataRow title="Status zamówienia:" value={order.status.name}/>
                 <Grid item container justifyContent="center" marginTop={2}>

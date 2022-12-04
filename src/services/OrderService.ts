@@ -71,7 +71,7 @@ class OrderService {
     }
 
     updateOrder = (orderId: number, status: OrderStatus) => {
-        return axios.put(`${this.apiUrl}/order/${orderId}`, {newOrderStatus: status})
+        return axios.put(`${this.apiUrl}/order/${orderId}`, status)
     }
 }
 
