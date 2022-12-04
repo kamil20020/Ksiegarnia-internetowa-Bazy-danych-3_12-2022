@@ -12,6 +12,7 @@ import pl.edu.pwr.ksiegarniainternetowa.model.api.response.LoggedUserDetails;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.ClientEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.PersonalDataEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.UserEntity;
+import pl.edu.pwr.ksiegarniainternetowa.repository.UserRepository;
 import pl.edu.pwr.ksiegarniainternetowa.service.ClientService;
 import pl.edu.pwr.ksiegarniainternetowa.service.PersonalDataService;
 import pl.edu.pwr.ksiegarniainternetowa.service.TokenService;
@@ -28,6 +29,7 @@ public class UserController {
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ClientService clientService;
+    private final UserRepository userRepository;
 
     private final TokenService tokenService;
 

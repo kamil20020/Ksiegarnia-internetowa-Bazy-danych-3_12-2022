@@ -38,6 +38,10 @@ public class SecurityConfig {
                 User.withUsername("bill")
                         .password("{noop}12345")
                         .authorities("read")
+                        .build(),
+                User.withUsername("bob")
+                        .password("{noop}12345")
+                        .authorities("read")
                         .build()
         );
     }
@@ -46,9 +50,8 @@ public class SecurityConfig {
         return http
             .csrf(csrf -> csrf.disable())
             .authorizeRequests(auth -> auth
-                .antMatchers("/v1/user/token").permitAll()
-                .antMatchers("/v1/user/register").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
+                //.anyRequest().authenticated()
             )
             .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
