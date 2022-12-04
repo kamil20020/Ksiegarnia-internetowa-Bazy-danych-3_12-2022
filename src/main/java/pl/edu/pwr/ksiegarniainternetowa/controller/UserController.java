@@ -19,11 +19,11 @@ import pl.edu.pwr.ksiegarniainternetowa.service.UserService;
 public class UserController {
 
     private final UserService userService;
-    private final PersonalDataService personalDataSerivce;
+    private final PersonalDataService personalDataService;
     private final ClientService clientService;
 
     @PostMapping(value = "/register")
-    public String registerUser(@RequestBody RegistrationData registrationData) {
+    public ResponseEntity<String> registerUser(@RequestBody RegistrationData registrationData) {
 
         UserEntity userEntity = UserEntity.builder()
                 .username(registrationData.getUsername())
@@ -37,12 +37,12 @@ public class UserController {
                 .email(registrationData.getEmail())
                 .tel(registrationData.getTel())
                 .build();
-        personalDataEntity = personalDataSerivce.save(personalDataEntity);
+        personalDataEntity = personalDataService.save(personalDataEntity);
         ClientEntity clientEntity = ClientEntity.builder()
                 .userEntity(userEntity)
                 .personalDataEntity(personalDataEntity)
                 .build();
         clientService.save(clientEntity);
-        return "Registration completed successfully";
+        return new ResponseEntity<>("Registration completed successfully", HttpStatus.OK);
     }
 }
