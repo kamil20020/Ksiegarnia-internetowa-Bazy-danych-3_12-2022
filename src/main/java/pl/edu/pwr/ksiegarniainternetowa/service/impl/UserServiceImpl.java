@@ -2,6 +2,7 @@ package pl.edu.pwr.ksiegarniainternetowa.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.edu.pwr.ksiegarniainternetowa.exception.EntityConflictException;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.UserEntity;
 import pl.edu.pwr.ksiegarniainternetowa.repository.UserRepository;
@@ -27,7 +28,18 @@ public class UserServiceImpl implements UserService {
         return foundUserEntityOpt.get();
     }
 
-    public UserEntity save(UserEntity userEntity) {
+    @Override
+    public UserEntity getByUsername(String username){
+
+        return userRepository.getByUsername(username);
+    }
+
+    public UserEntity save(UserEntity userEntity) throws EntityConflictException {
+
+        if(userRepository.existsByUsername(userEntity.getUsername())){
+            throw new EntityConflictException("Istnieje już użytkownik o takiej nazwie użytkownika");
+        }
+
         return userRepository.save(userEntity);
     }
 }

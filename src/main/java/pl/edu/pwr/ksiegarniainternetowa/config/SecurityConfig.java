@@ -44,18 +44,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeRequests(auth -> auth
-                        .anyRequest().authenticated()
-                )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(withDefaults())
-                .build();
+            .csrf(csrf -> csrf.disable())
+            .authorizeRequests(auth -> auth
+                .antMatchers("/v1/user/token").permitAll()
+                .antMatchers("/v1/user/register").permitAll()
+                .anyRequest().authenticated()
+            )
+            .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .httpBasic(withDefaults())
+            .build();
     }
 
     @Bean
     JwtDecoder jwtDecoder() {
+
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
 

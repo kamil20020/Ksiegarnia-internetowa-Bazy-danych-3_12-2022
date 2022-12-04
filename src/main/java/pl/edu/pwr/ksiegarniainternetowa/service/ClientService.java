@@ -10,5 +10,7 @@ public interface ClientService {
     boolean existsById(Long id);
     ClientEntity getById(Long id);
 
+    ClientEntity getByUserId(Long userId);
+
     void save(ClientEntity clientEntity);
 }

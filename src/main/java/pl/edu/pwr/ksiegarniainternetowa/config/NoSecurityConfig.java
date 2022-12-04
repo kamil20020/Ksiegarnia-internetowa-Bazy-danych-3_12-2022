@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
 @Configuration
-@Profile("prod")
+@Profile("dev")
 public class NoSecurityConfig {
 
     @Bean

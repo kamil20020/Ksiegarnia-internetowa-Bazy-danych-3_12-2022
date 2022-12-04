@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.pwr.ksiegarniainternetowa.exception.EntityConflictException;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.RegistrationData;
+import pl.edu.pwr.ksiegarniainternetowa.model.api.response.LoggedUserDetails;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.ClientEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.PersonalDataEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.UserEntity;
@@ -13,6 +16,8 @@ import pl.edu.pwr.ksiegarniainternetowa.service.ClientService;
 import pl.edu.pwr.ksiegarniainternetowa.service.PersonalDataService;
 import pl.edu.pwr.ksiegarniainternetowa.service.TokenService;
 import pl.edu.pwr.ksiegarniainternetowa.service.UserService;
+
+import java.security.Principal;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8000", "https://booksshop-dr.azurewebsites.net"})
@@ -34,7 +39,14 @@ public class UserController {
                 .password(registrationData.getPassword())
                 .isEmployee(false)
                 .build();
-        userEntity = userService.save(userEntity);
+
+        try{
+            userEntity = userService.save(userEntity);
+        }
+        catch(EntityConflictException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+
         PersonalDataEntity personalDataEntity = PersonalDataEntity.builder()
                 .name(registrationData.getName())
                 .surname(registrationData.getSurname())
@@ -51,8 +63,29 @@ public class UserController {
     }
 
     @PostMapping("/token")
-    public String token(Authentication authentication) {
+    public ResponseEntity token(Authentication authentication) {
+
         String token = tokenService.generateToken(authentication);
-        return token;
+
+        User userInfo = (User) authentication.getPrincipal();
+
+        String username = userInfo.getUsername();
+
+        UserEntity userEntity = userService.getByUsername(username);
+
+        Long clientId = null;
+
+        if(!userEntity.getIsEmployee()){
+
+            clientId = clientService.getByUserId(userEntity.getId()).getId();
+        }
+
+        LoggedUserDetails loggedUserDetails = LoggedUserDetails.builder()
+                .accessToken(token)
+                .userId(userEntity.getId())
+                .clientId(clientId)
+            .build();
+
+        return ResponseEntity.ok(loggedUserDetails);
     }
 }

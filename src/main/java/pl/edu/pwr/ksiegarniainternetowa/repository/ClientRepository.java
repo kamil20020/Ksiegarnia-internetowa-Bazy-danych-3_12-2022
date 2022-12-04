@@ -6,4 +6,6 @@ import pl.edu.pwr.ksiegarniainternetowa.model.entity.ClientEntity;
 
 @Repository
 public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
+
+    ClientEntity getByUserEntityId(Long userId);
 }

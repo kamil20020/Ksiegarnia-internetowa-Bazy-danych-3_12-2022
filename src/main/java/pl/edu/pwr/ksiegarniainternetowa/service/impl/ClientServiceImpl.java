@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.edu.pwr.ksiegarniainternetowa.exception.EntityNotFoundException;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.ClientEntity;
-import pl.edu.pwr.ksiegarniainternetowa.model.entity.UserEntity;
 import pl.edu.pwr.ksiegarniainternetowa.repository.ClientRepository;
 import pl.edu.pwr.ksiegarniainternetowa.service.ClientService;
 
@@ -34,6 +33,12 @@ public class ClientServiceImpl implements ClientService {
         }
 
         return foundClientEntityOpt.get();
+    }
+
+    @Override
+    public ClientEntity getByUserId(Long userId){
+
+        return clientRepository.getByUserEntityId(userId);
     }
 
     @Override

@@ -6,4 +6,7 @@ import pl.edu.pwr.ksiegarniainternetowa.model.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+    boolean existsByUsername(String username);
+    UserEntity getByUsername(String username);
 }
