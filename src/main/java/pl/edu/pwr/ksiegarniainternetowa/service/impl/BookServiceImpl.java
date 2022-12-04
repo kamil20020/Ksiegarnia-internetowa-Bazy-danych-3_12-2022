@@ -7,6 +7,7 @@ import pl.edu.pwr.ksiegarniainternetowa.model.entity.BookEntity;
 import pl.edu.pwr.ksiegarniainternetowa.repository.BookRepository;
 import pl.edu.pwr.ksiegarniainternetowa.service.BookService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 

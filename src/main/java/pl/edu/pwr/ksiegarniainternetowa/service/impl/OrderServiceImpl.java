@@ -219,6 +219,7 @@ public class OrderServiceImpl implements OrderService {
 
         if(receiverData != null){
             Long personalDataId = personalDataService.create(receiverData);
+
             receiverDataEntity = receiverDataService.create(personalDataId);
         }
 
@@ -261,8 +262,32 @@ public class OrderServiceImpl implements OrderService {
             throw new EntityNotFoundException("Nie istnieje status zamówienia o takim id");
         }
 
-        foundOrderEntityOpt.get().setOrderStatusEntity(orderStatusEntity);
+        OrderEntity orderEntity = foundOrderEntityOpt.get();
 
-        return foundOrderEntityOpt.get();
+        if(orderEntity.getOrderStatusEntity().getName().equals("Odebrane") ||
+            orderEntity.getOrderStatusEntity().getName().equals("Wycofane")
+        ){
+            throw new IllegalStateException("Nie można zmienić stanu tego zamówienia");
+        }
+
+        if(orderStatusEntity.getName().equals("Odebrane")){
+            orderEntity.setFullfillmentDate(LocalDateTime.now());
+        }
+        else{
+            orderEntity.setFullfillmentDate(null);
+            orderEntity.setOrderStatusEntity(orderStatusEntity);
+        }
+
+        if(orderStatusEntity.getName().equals("Wycofane")){
+            orderEntity.getOrderItemEntityList().stream().forEach(orderItemEntity -> {
+                BookItemEntity bookItemEntity =  orderItemEntity.getBookItemEntity();
+                bookItemEntity.setIsPurchased(false);
+
+                BookEntity bookEntity = bookItemEntity.getBookEntity();
+                bookEntity.setNumOfBookItems(bookEntity.getNumOfBookItems() + 1);
+            });
+        }
+
+        return orderEntity;
     }
 }

@@ -17,7 +17,6 @@ public class PersonalDataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Column(name = "name", length = 32, nullable = false)

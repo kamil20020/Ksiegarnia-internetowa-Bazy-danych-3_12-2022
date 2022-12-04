@@ -175,7 +175,7 @@ public class OrderController {
     }
 
     @PutMapping("/order/{orderId}")
-    public ResponseEntity updateOrderStatus(@PathVariable("orderId") String orderIdStr, OrderStatusEntity newOrderStatus){
+    public ResponseEntity updateOrderStatus(@PathVariable("orderId") String orderIdStr, @RequestBody OrderStatusEntity newOrderStatus){
 
         if(newOrderStatus == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nie podano statusu zamówienia");
@@ -197,6 +197,9 @@ public class OrderController {
         }
         catch(EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch(IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
         return ResponseEntity.ok(updatedOrder);

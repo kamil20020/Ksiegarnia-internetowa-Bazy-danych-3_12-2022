@@ -9,5 +9,4 @@ public interface BookService {
     boolean existsById(Long bookId);
     BookEntity getBookById(Long bookId);
     List<BookEntity> getByIdList(List<Long> ids);
-
 }

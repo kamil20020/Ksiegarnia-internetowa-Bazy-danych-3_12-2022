@@ -391,7 +391,6 @@ DROP TABLE IF EXISTS `receiversdata`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `receiversdata` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(10) COLLATE utf8_polish_ci NOT NULL,
   `personal_data_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ReceiversData_personal_data_id_ee868a30_fk_PersonalData_id` (`personal_data_id`),
