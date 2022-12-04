@@ -3,6 +3,7 @@ package pl.edu.pwr.ksiegarniainternetowa.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwr.ksiegarniainternetowa.model.api.request.RegistrationData;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.ClientEntity;
@@ -10,6 +11,7 @@ import pl.edu.pwr.ksiegarniainternetowa.model.entity.PersonalDataEntity;
 import pl.edu.pwr.ksiegarniainternetowa.model.entity.UserEntity;
 import pl.edu.pwr.ksiegarniainternetowa.service.ClientService;
 import pl.edu.pwr.ksiegarniainternetowa.service.PersonalDataService;
+import pl.edu.pwr.ksiegarniainternetowa.service.TokenService;
 import pl.edu.pwr.ksiegarniainternetowa.service.UserService;
 
 @RestController
@@ -21,6 +23,8 @@ public class UserController {
     private final UserService userService;
     private final PersonalDataService personalDataService;
     private final ClientService clientService;
+
+    private final TokenService tokenService;
 
     @PostMapping(value = "/register")
     public ResponseEntity<String> registerUser(@RequestBody RegistrationData registrationData) {
@@ -44,5 +48,11 @@ public class UserController {
                 .build();
         clientService.save(clientEntity);
         return new ResponseEntity<>("Registration completed successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/token")
+    public String token(Authentication authentication) {
+        String token = tokenService.generateToken(authentication);
+        return token;
     }
 }
