@@ -19,6 +19,8 @@ export interface BasketProductWithDetails {
 
 const Basket = () => {
 
+    const userDetails = useSelector((state: RootState) => state.user)
+
     const basketProducts = useSelector((state: RootState) => state.basket).products
     const totalPrice = useSelector((state: RootState) => state.basket).totalPrice as number
 
@@ -113,13 +115,22 @@ const Basket = () => {
                         </Typography>
                     </Grid>
                     <Grid item container justifyContent="center">
-                        {basketProducts.length > 0 &&
+                        {userDetails.isLogged ?
+                            basketProducts.length > 0 &&
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleNavigateOrder}
+                                >
+                                    Złóż zamówienie
+                                </Button>
+                        :
                             <Button
                                 variant="contained"
                                 color="secondary"
-                                onClick={handleNavigateOrder}
+                                onClick={() => navigate('/login')}
                             >
-                                Złóż zamówienie
+                                Zaloguj się
                             </Button>
                         }
                     </Grid>

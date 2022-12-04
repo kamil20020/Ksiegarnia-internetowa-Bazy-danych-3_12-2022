@@ -350,9 +350,9 @@ const SearchOrders = () => {
             pagination
             columns={columns}
             page={pagination.page}
+            paginationMode="server"
             pageSize={pagination.size}
             rowsPerPageOptions={[5]}
-            experimentalFeatures={{ newEditingApi: true }}
             onSelectionModelChange={(id) => navigate(`../order/${id}`)}
             onPageChange={(page: number) => {
               handleSubmit(page)

@@ -6,22 +6,28 @@ import { RootState } from "../../redux/store";
 
 type ProtectedRouteProps = {
     children: React.ReactNode,
-    isEmployee?: boolean
+    isNotLogged: boolean,
+    isClient: boolean,
+    isEmployee: boolean
 };
 
 const ProtectedRoute = (props: ProtectedRouteProps) => {
 
-    const userDetails = useSelector((state: RootState) => state);
+    const userDetails = useSelector((state: RootState) => state.user);
 
-    if(props.isEmployee == undefined){
+    if(props.isNotLogged){
         return <React.Fragment>{props.children}</React.Fragment>
     }
 
-    if(!props.isEmployee){
-        return userDetails.user.clientId ? <React.Fragment>{props.children}</React.Fragment> : <Forbidden/>
+    if(props.isClient){
+        return userDetails.clientId ? <React.Fragment>{props.children}</React.Fragment> : <Forbidden/>
     }
 
-    return userDetails.user.isLogged && !userDetails.user.clientId ? <React.Fragment>{props.children}</React.Fragment> : <Forbidden/>
+    if(props.isEmployee){
+        return (userDetails.isLogged && !userDetails.clientId) ? <React.Fragment>{props.children}</React.Fragment> : <Forbidden/>
+    }
+
+    return <div></div>
 }
 
 export default ProtectedRoute;

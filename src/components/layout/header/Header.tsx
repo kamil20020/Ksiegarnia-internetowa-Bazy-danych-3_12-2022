@@ -104,7 +104,7 @@ const Header = () => {
             </Grid>
           </React.Fragment>
         )}
-        {userDetails.clientId &&
+        {!(userDetails.isLogged && !userDetails.clientId) &&
           <Grid item>
             <Link to="/basket" className="nice-link">
               <img src={basket} width="60" alt="koszyk"/>

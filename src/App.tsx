@@ -70,33 +70,29 @@ function App() {
               <Route path="/" element={<Shop />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/book-details/:bookId" element={
-                <ProtectedRoute isEmployee={false}>
-                  <BookDetails />
-                </ProtectedRoute>
-              } />
+              <Route path="/book-details/:bookId" element={<BookDetails />} />
               <Route path="/basket" element={
-                <ProtectedRoute isEmployee={false}>
+                <ProtectedRoute isNotLogged={true} isClient={true} isEmployee={false}>
                   <Basket/>
                 </ProtectedRoute>
               } />
               <Route path="/order" element={
-                <ProtectedRoute isEmployee={false}>
+                <ProtectedRoute isNotLogged={false} isClient={true} isEmployee={false}>
                   <OrderView />
                 </ProtectedRoute>
               } />
               <Route path="/my-orders" element={
-                <ProtectedRoute isEmployee={false}>
+                <ProtectedRoute isNotLogged={false} isClient={true} isEmployee={false}>
                   <MyOrders />
                 </ProtectedRoute>
               } />
               <Route path="/all-orders" element={
-                <ProtectedRoute isEmployee={true}>
+                <ProtectedRoute isNotLogged={false} isClient={false} isEmployee={true}>
                   <SearchOrders />
                 </ProtectedRoute>
               } />
               <Route path="/order/:orderId" element={
-                <ProtectedRoute isEmployee={true}>
+                <ProtectedRoute isNotLogged={false} isClient={false} isEmployee={true}>
                   <OrderData />
                 </ProtectedRoute>
               } />

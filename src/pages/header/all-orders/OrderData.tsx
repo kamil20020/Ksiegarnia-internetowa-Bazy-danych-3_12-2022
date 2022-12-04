@@ -42,7 +42,7 @@ const OrderData = () => {
     const handleUpdateOrder = (status: OrderStatus) => {
         OrderService.updateOrder(orderId, status)
         .then((response) => {
-            setOrder({...order, status: response.data.status, fullfillmentDate: response.data.fullfillmentDate})
+            setOrder({...order, status: response.data.status, fullfillmentDate: response.data.fullfillmentDate, totalPrice: response.data.totalPrice})
         })
     }
 
