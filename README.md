@@ -220,5 +220,5 @@ Wyszukiwarka zamówień z wypełnionymi kryteriami i filtrami:
 
 Zarządzanie zamówieniem:
 <p align="center">
-    <img src="img/screeny/zarzazanie-zamowieniem.png">
+    <img src="img/screeny/zarzadzanie-zamowieniem.png">
 </p>
