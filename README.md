@@ -1,5 +1,5 @@
 # Księgarnia internetowa (12.2022)
-Aplikacja została zrealizowana w ramach zajęć projektowych z Internetowych baz danych na Politechnice Wrocławskiej.
+Aplikacja została zrealizowana w ramach zajęć projektowych z Internetowych baz danych na Politechnice Wrocławskiej. Szacujemy, że aplikację udało się zrealizować w około 90%.
 
 ## Cel projektu
 Celem projektu były projekt, implementacja oraz wdrożenie księgarni internetowej dla wymyślonej firmy "Bookshop". Firma ta znajduje się na terenie Wrocławia oraz zajmuje się stacjonarną sprzedażą książek. Głównym powodem stworzenia systemu było usprawnienie pracy firmy oraz zapewnienie wygodnej i szybkiej obsługi klienta.
