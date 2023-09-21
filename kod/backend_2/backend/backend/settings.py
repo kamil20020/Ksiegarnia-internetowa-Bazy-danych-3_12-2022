@@ -102,14 +102,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'bookshopdb',
-        'USER': 'unlogged_person',
-        'PASSWORD': '5Dn%sfr%Jth6',
-        'HOST': 'bookshop.mysql.database.azure.com',
-        'PORT': '3306',
-        'OPTIONS': {
-        	'read_default_file': '/etc/mysql/my.cnf',
-            'ssl': {'ca': 'backend/DigiCertGlobalRootCA.crt.pem'},
-    	},
+        'USER': 'root',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '3306'
     }
 }
 

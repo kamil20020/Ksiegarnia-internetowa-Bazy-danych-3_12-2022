@@ -15,7 +15,7 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . /usr/src/app
 
-EXPOSE $PORT
+EXPOSE 8000
 
 CMD ["cd", "backend"]
-CMD python backend/manage.py runserver 0.0.0.0:$PORT
+CMD python backend/manage.py runserver 0.0.0.0:8000
